@@ -1,7 +1,7 @@
 # IFTTT iOS Project
 
 ## Overview
-IFTTT is a platform which allows users to create customized integrations called Applets using "triggers" and actions". 
+IFTTT is a platform which allows users to create customized integrations called Applets using "triggers" and "actions". 
 Every Applet run begins with a trigger. Triggers represent an event that may be specific to the user (a new photo taken with their phone) or something that's changed in the world (a stock price passes a threshold).
 An Applet may have one or more actions which represent work we do on a user's behalf. For example, turning on their lights or opening a garage door.
 
