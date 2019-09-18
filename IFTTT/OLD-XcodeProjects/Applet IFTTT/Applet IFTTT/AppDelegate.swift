@@ -10,23 +10,20 @@ import UIKit
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
-
-    lazy var window: UIWindow? = {
-        return UIWindow(frame: UIScreen.main.bounds)
-    }()
-    
-    static var shared: AppDelegate {
-        return UIApplication.shared.delegate as! AppDelegate
-    }
+    var window: UIWindow?
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        let collectionViewController = TriggerCollectionViewController()
-        collectionViewController.view.backgroundColor = .white
-        collectionViewController.viewDidLoad()
-        self.window?.rootViewController = collectionViewController
-        self.window?.makeKeyAndVisible()
-
+        self.window = UIWindow(frame: UIScreen.main.bounds)
+        self.window?.backgroundColor = .white
+        guard let window = self.window else {
+            print("fuck false")
+            return false
+        }
+        let viewController = TriggerCollectionViewController()
+        viewController.viewDidLoad()
+        window.rootViewController = viewController
+        window.makeKeyAndVisible()
         return true
+        
     }
-
 }
