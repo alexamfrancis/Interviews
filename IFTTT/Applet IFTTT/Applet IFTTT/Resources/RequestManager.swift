@@ -26,8 +26,9 @@ public enum RequestHeaders: String {
     case flow = "flow"
 }
 
-public class RequestManager: NetworkManager {
-    
+public class RequestManager: Alamofire.SessionManager {
+    open func request(_ url: URLRequestConvertible, completion: @escaping (Alamofire.DataRequest) -> Void)
+
     private struct Constant {
         static let jwtTokenResponseHeaderKey: String = "Authorization"
     }
@@ -62,79 +63,28 @@ public class RequestManager: NetworkManager {
         // How long to wait for an entire resource to transfer before giving up. Default is 7 days.
         configuration.timeoutIntervalForResource = TimeInterval(RequestManager.requestTimeoutInSec)
         
-        // Note: It is a system-level limitation that whatever headers are set via HTTPAdditionalHeaders, will not print out via the 'allHTTPHeaderFields' property of a URL request. One way to see what's truly being sent out is to hit an endpoint which echoes back the request's headers.. then print that response.
-        // If a request-specific header contains the same key as these base-level headers, the request-specific value will be used.
-        
-        configuration.httpAdditionalHeaders = [
-            "Accept-Encoding": "gzip",
-            "Content-Type": "application/json",
-            "media-type": "application/json",
-            "app-id": String(UserSession.shared.hostAppId ?? AppDetails.appID),
-            "device-locale": Locale.deviceLocale,
-            "flow": (UserSession.shared.hostAppId == Host.cma) ? "RESERVE" : "RUN",
-            "api-version" : "2.0"
-        ]
         
         // Note: Once Alamofire.Manager creates a NSURLSession with the given configuration, it is not possible to change the configuration and have those changes take effect.
         // A new Alamofire.Manager instance must be created in order to change the configuration.
         super.init(configuration: configuration, serverTrustPolicyManager: nil)
         
-        if !skipAuthenticator {
-            self.adapter = self as RequestAdapter
-            // Use the singelton here so that every RequestManager instance uses the same authenticator
-            self.setupAuthenticator(Authenticator.shared)
-        }
-        
-        // setup logger
-        let logLevel: FargoLogger.Level = LogManager.logger(forName: .root)?.configuration.level ?? .error
-        let loggerSettings = NetworkLogger.Settings(automaticLogging: true, loggingOptions: NetworkLogger.loggingOptions(for: logLevel), redactedRequestHeaderKeys: ["STARTER_SERVICE_TOKEN"])
-        self.logger = NetworkLogger(settings: loggerSettings, logClosure: { (logString) in
-            Log.debug(logString)
-        })
-        
-        // configure server url
-        self.configureBaseUrl()
-        
-        NotificationCenter.default.addObserver(forName: Notification.Name.Environment.DidChange, object: nil, queue: nil, using: onEnvironmentDidChange)
     }
     
-    // MARK: - Override Requests
-    /// Overrides the default `request` method to check if we have received a token expired error from the server and if we have then fires the refreshToken request
-    ///
-    /// - Parameters:
-    ///   - url: The `URLRequest` to be fired
-    ///   - completion: called when the request object is formed
-    override public func request(_ url: URLRequestConvertible, completion: @escaping (DataRequest) -> Void) {
-        super.request(url) { [weak self] request in
+    public override func request(_ urlRequest: URLRequestConvertible) -> DataRequest {
+        urlRequest.validate().responseData(completionHandler: { [weak self] response in
             guard let self = self else { return }
             
-            request.validate().responseData(completionHandler: { [weak self] response in
+            self.reauthIfRequired(with: response, retryRequestBlock: { [weak self] in
                 guard let self = self else { return }
                 
-                self.reauthIfRequired(with: response, retryRequestBlock: { [weak self] in
-                    guard let self = self else { return }
-                    
-                    DispatchQueue.main.async {
-                        self.request(url, completion: completion)
-                    }
-                })
+                DispatchQueue.main.async {
+                    self.request(url, completion: completion)
+                }
             })
-            
-            completion(request)
         }
     }
     
-    // MARK: - Convenience methods
-    
-    /// A convenient way to call `RequestManager.request()` and get the result in a wrapped success-with-data-or-failure-with-error type.
-    ///
-    /// This function expects the given url to return a non-empty JSON result.
-    ///
-    /// The following steps are performed:
-    /// 1. Calls `RequestManager.request`.
-    /// 2. Attempts to interpret a successful response as a JSON dictionary.
-    /// 3. Wraps up the value - or error, if any - in a ServerResult.
-    public func jsonRequest(_ url: URLRequestConvertible, completion: @escaping (FargoCore.Result<[String: Any]>, [AnyHashable:Any]?) -> Void) {
+    public func jsonRequest(_ url: URLRequestConvertible, completion: @escaping ([String: Any], [AnyHashable:Any]?) -> Void) {
         self.request(url) { (request) in
             
             request.validate().responseJSON { (response) in
@@ -347,18 +297,5 @@ public class RequestManager: NetworkManager {
     private func onEnvironmentDidChange(notification: Notification) {
         // update the base url
         self.configureBaseUrl()
-    }
-    
-    private func configureBaseUrl() {
-        if Environment.shared.isSecure {
-            RequestManager.serverProtocol = "https"
-        } else {
-            RequestManager.serverProtocol = "http"
-        }
-        
-        RequestManager.serverHostname = Environment.shared.host
-        RequestManager.serverServicesPath = ""
-        
-        Log.debug("Base Url set to: \(RequestManager.serverBaseUrl)")
     }
 }
