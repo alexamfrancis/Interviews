@@ -68,225 +68,40 @@ public class RequestManager: Alamofire.SessionManager {
         super.init(configuration: configuration, serverTrustPolicyManager: nil)
         
     }
-    
-    public override func request(_ urlRequest: URLRequestConvertible) -> DataRequest {
-        urlRequest.responseData(completionHandler: { [weak self] response in
-            guard let self = self else { return }
-            
-            self.reauthIfRequired(with: response, retryRequestBlock: { [weak self] in
-                guard let self = self else { return }
-                
-                DispatchQueue.main.async {
-                    self.request(url, completion: completion)
-                }
-            })
-        })
-    }
-    
-    override public func request(_ url: URLRequestConvertible, completion: @escaping (DataRequest) -> Void) {
-        super.request(url) { [weak self] request in
-            guard let self = self else { return }
-            
-            request.validate().responseData(completionHandler: { [weak self] response in
-                guard let self = self else { return }
-                
-                self.reauthIfRequired(with: response, retryRequestBlock: { [weak self] in
-                    guard let self = self else { return }
-                    
-                    DispatchQueue.main.async {
-                        self.request(url, completion: completion)
-                    }
-                })
-            })
-            
-            completion(request)
-        }
-    }
 
     public func jsonRequest(_ url: URLRequestConvertible, completion: @escaping ([String: Any], [AnyHashable:Any]?) -> Void) {
-        self.request(url) { (request) in
-            
+        request(url)
+        
+        self.request(url) {
+            completion(request.ifSuccess())
             request.validate().responseJSON { (response) in
                 let result: [String: Any]
-                
                 completion(result, response.response?.allHeaderFields)
             }
         }
     }
-    public func dataRequest(_ url: URLRequestConvertible, completion: @escaping (FargoCore.Result<Void>) -> Void) {
-        self.request(url) { (request) in
-            
-            request.validate().responseData { (response) in
-                return response
-            }
-        }
-    }
     
-    /// A convenient way to call `RequestManager.request()` and get a result in a wraper success-with-data-or-failre-with-error type.
-    ///
-    ///    This function expects the given url to return a Data object which will then be converted to a `Decodable` object.
-    ///
-    /// - Parameters:
-    ///   - url: URLRequest
-    ///      - keyPath: keyPath to extract the objects from in the response. Defaults to nil
-    ///   - completion: completion with `FargoCore.Result` and an optional String representing the JWTToken included
-    ///                 in the repsonse header.
-    public func objectRequest<T: Decodable>(_ url: URLRequestConvertible, keyPath: String? = nil, completion: @escaping (FargoCore.Result<T>, String?) -> Void) {
-        self.request(url) { (request) in
-            
-            request.validate(statusCode: Set(200..<300).subtracting(Set([204, 209]))).responseObject(keyPath: keyPath) { (response: DataResponse<T>) in
-                let result: FargoCore.Result<T>
-                
-                let jwtToken = response.response?.allHeaderFields[Constant.jwtTokenResponseHeaderKey] as? String
-                
-                if let error = response.result.error {
-                    let serverError = RequestManager.extractServerError(response.data) ?? error
-                    result = .failure(RequestError(underlyingError: serverError, response: response.nonGenericResponse()))
-                } else if let value = response.result.value {
-                    result = .success(value)
-                } else {
-                    let underlyingError = SpecificRequestError.invalidResponse("Failed to cast response to 'Decodable' model")
-                    result = .failure(RequestError(underlyingError: underlyingError, response: response.nonGenericResponse()))
-                }
-                
-                completion(result, jwtToken)
-            }
-        }
-    }
-    
-    /// A convenient way to call `RequestManager.request()` and get a result in a wraper success-with-data-or-failre-with-error type.
-    ///
-    ///    This function expects the given url to return a Data object which will then be converted to an Array of `Decodable` object.
-    /// This function expects the given url to return a message key and message response (i.e. a 209 HTTP status code).
-    
-    /// - Parameters:
-    ///   - url: URLRequest
-    ///      - keyPath: keyPath to extract the objects from in the response. Defaults to nil
-    ///   - completion: completion with `FargoCore.Result` and an optional String representing the JWTToken included
-    ///                 in the repsonse header.
-    public func objectRequest<T: Decodable>(_ url: URLRequestConvertible, keyPath: String? = nil, completion: @escaping (FargoCore.Result<[T]>, String?) -> Void) {
-        self.request(url) { (request) in
-            
-            request.validate(statusCode: Set(200..<300).subtracting(Set([209]))).responseObject(keyPath: keyPath) { (response: DataResponse<[T]>) in
-                let result: FargoCore.Result<[T]>
-                
-                let jwtToken = response.response?.allHeaderFields[Constant.jwtTokenResponseHeaderKey] as? String
-                
-                if let error = response.result.error {
-                    let serverError = RequestManager.extractServerError(response.data) ?? error
-                    result = .failure(RequestError(underlyingError: serverError, response: response.nonGenericResponse()))
-                } else if let value = response.result.value {
-                    result = .success(value)
-                } else {
-                    let underlyingError = SpecificRequestError.invalidResponse("Failed to cast response to 'Decodobale' model")
-                    result = .failure(RequestError(underlyingError: underlyingError, response: response.nonGenericResponse()))
-                }
-                
-                completion(result, jwtToken)
-            }
-        }
-    }
-    
-    //MARK: - Helper methods
-    
-    /// Extracts the server error from the original response data if it exists
-    ///
-    /// - Parameter response: original response
-    /// - Returns: RequestError.serverErrors with an array of errors, or nil
-    public class func extractServerError(_ responseData: Data?) -> Error? {
-        
-        // First look for a single root level error object
-        if let data = responseData, let jsonObject = JSON.dataToJSONObject(data) as? [String: Any], let serverError = serverError(fromDictionary: jsonObject) {
-            // Create an array with the single root level error object we found
-            return SpecificRequestError.serverErrors([serverError])
-            // Then look for an some message keys for http code 209 in response
-        } else if let data = responseData, let jsonObject = JSON.dataToJSONObject(data) as? [String: Any], let serverError = serverMessageForEmptyResponse(fromDictionary: jsonObject) {
-            return SpecificRequestError.serverErrors([serverError])
-            // Then look for an "errorDetails" array at the root level that contains dictionaries
-        } else if let data = responseData, let jsonObject = JSON.dataToJSONObject(data) as? [String: Any], let errorDetails = jsonObject["errorDetails"] as? [[String: Any]] {
-            
-            // Extract all errors from the error details array
-            let errors = errorDetails.compactMap({ serverError(fromDictionary: $0) })
-            
-            // Return nil if we find no errors
-            guard !errors.isEmpty else { return nil }
-            
-            // Otherwise put them all into a server error object
-            return SpecificRequestError.serverErrors(errors)
-            // This final check is for certain errors delievered to us as an array of [String: Any] dictionaries. The
-            // errorCode and errorMessage fields are of particular importance.
-        } else if let data = responseData, let jsonArray = JSON.dataToJSONObject(data) as? [Any?], !jsonArray.isEmpty {
-            
-            if let jsonDictionary = jsonArray[0] as? [String: String], let errorCode: String = jsonDictionary["errorCode"] {
-                return ServerError(code: errorCode, message: jsonDictionary["errorMessage"])
-            }
-            
-            
-        }
-        
-        // Default
-        return nil
-    }
-    
-    /// Extracts a server error from a JSON dictionary
-    ///
-    /// - Parameter dictionary: dictionary in which to look for the error code and message for the error
-    /// - Returns: ServerError or nil
-    private class func serverError(fromDictionary dictionary: [String: Any]) -> ServerError? {
-        
-        // Require an errorCode. If we don't find one then exit early.
-        guard let serverErrorCode = dictionary["errorKey"] as? String else { return nil }
-        
-        // Optional message param only used for logging
-        let serverDebugErrorMessage = dictionary["message"] as? String
-        Log.debug(serverDebugErrorMessage ?? serverErrorCode)
-        
-        // Return the ServerError object
-        return ServerError(code: serverErrorCode, message: serverDebugErrorMessage)
-    }
-    
-    /// Extracts a server message from a JSON dictionary in case of 209
-    ///
-    /// - Parameter dictionary: dictionary in which to look for the message key and message from the error
-    /// - Returns: ServerError or nil
-    private class func serverMessageForEmptyResponse(fromDictionary dictionary: [String: Any]) -> ServerError? {
-        
-        // Requires a message key. If we don't find one then exit early.
-        guard let serverMessageKey = dictionary["messageKey"] as? String else { return nil }
-        let serverMessage = dictionary["message"] as? String
-        
-        // Return the ServerError object
-        return ServerError(code: serverMessageKey, message: serverMessage)
-    }
-    
-    private func reauthIfRequired<T>(with response: DataResponse<T>, retryRequestBlock: () -> Void) {
-        var shouldFireReauth = false
-        
-        // If sos bridge throws unauthorized error, perform reauth again
-        if let serverError = RequestManager.extractServerError(response.data) as? RequestError, serverError.errorDescription == "Error.Unauthorized" {
-            shouldFireReauth = true
-        }
-        
-        // When the status code is 401 - token expired error, perform reauth again
-        if let statusCode = response.response?.statusCode, statusCode == 401 {
-            shouldFireReauth = true
-        }
-        
-        guard shouldFireReauth else { return }
-        
-        // Token expired, so let's fire a refreshToken request
-        Log.info("Service token expired. Firing refreshToken...")
-        
-        // First let's set the user to nil
-        Authenticator.shared.user = nil
-        
-        // Now let's fire the last request again. This will trigger the refreshToken automaticaly
-        Log.info("Dispatching the last request which received a 401/403 again...")
-        retryRequestBlock()
-    }
-    
-    private func onEnvironmentDidChange(notification: Notification) {
-        // update the base url
-        self.configureBaseUrl()
-    }
+//    public func objectRequest<T: Decodable>(_ url: URLConvertible, keyPath: String? = nil, completion: @escaping (FargoCore.Result<T>, String?) -> Void) {
+//        self.request(url) { (request) in
+//
+//            request.validate(statusCode: Set(200..<300).subtracting(Set([204, 209]))).responseObject(keyPath: keyPath) { (response: DataResponse<T>) in
+//                let result: FargoCore.Result<T>
+//
+//                let jwtToken = response.response?.allHeaderFields[Constant.jwtTokenResponseHeaderKey] as? String
+//
+//                if let error = response.result.error {
+//                    let serverError = RequestManager.extractServerError(response.data) ?? error
+//                    result = .failure(RequestError(underlyingError: serverError, response: response.nonGenericResponse()))
+//                } else if let value = response.result.value {
+//                    result = .success(value)
+//                } else {
+//                    let underlyingError = SpecificRequestError.invalidResponse("Failed to cast response to 'Decodable' model")
+//                    result = .failure(RequestError(underlyingError: underlyingError, response: response.nonGenericResponse()))
+//                }
+//
+//                completion(result, jwtToken)
+//            }
+//        }
+//    }
+
 }

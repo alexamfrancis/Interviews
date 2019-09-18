@@ -87,8 +87,8 @@ public enum ServerError: LocalizedError {
     
     public var errorDescription: String? {
         switch self {
-        case .genericError(let code, let message):
-            return message
+        case .genericError(let message):
+            return message.message
         }
     }
     
@@ -101,14 +101,13 @@ public enum ServerError: LocalizedError {
     
     public var recoverySuggestion: String? {
         switch self {
-        case .genericError(let code, let optionalMessage):
+        case .genericError(let optionalMessage):
             var suggestions: [String] = []
-                    suggestions.append(optionalMessage)
-            }
+            suggestions.append(optionalMessage.message ?? "")
             
             // Add message from the server for Debug builds
             #if DEBUG
-            if let message = optionalMessage {
+            if let message = optionalMessage.message {
                 suggestions.append("[DEBUG] \(message)")
             }
             #endif
