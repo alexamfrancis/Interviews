@@ -8,9 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		D0C829122331FD640077B090 /* RequestError.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0C829112331FD640077B090 /* RequestError.swift */; };
-		D0C82916233215750077B090 /* TriggerCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0C82915233215740077B090 /* TriggerCollectionViewController.swift */; };
+		D0C82918233216290077B090 /* TriggerCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0C82917233216290077B090 /* TriggerCollectionViewController.swift */; };
 		D0F2608A232F9E64005FA653 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0F26089232F9E64005FA653 /* AppDelegate.swift */; };
-		D0F2608C232F9E64005FA653 /* TriggerCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0F2608B232F9E64005FA653 /* TriggerCollectionViewController.swift */; };
 		D0F26091232F9E65005FA653 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D0F26090232F9E65005FA653 /* Assets.xcassets */; };
 		D0F26094232F9E65005FA653 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D0F26092232F9E65005FA653 /* LaunchScreen.storyboard */; };
 		D0F2609F232F9E65005FA653 /* Applet_IFTTTTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0F2609E232F9E65005FA653 /* Applet_IFTTTTests.swift */; };
@@ -33,10 +32,9 @@
 
 /* Begin PBXFileReference section */
 		D0C829112331FD640077B090 /* RequestError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RequestError.swift; sourceTree = "<group>"; };
-		D0C82915233215740077B090 /* TriggerCollectionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TriggerCollectionViewController.swift; path = ViewControllers/TriggerCollectionViewController.swift; sourceTree = "<group>"; };
+		D0C82917233216290077B090 /* TriggerCollectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TriggerCollectionViewController.swift; sourceTree = "<group>"; };
 		D0F26086232F9E64005FA653 /* Applet IFTTT.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Applet IFTTT.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		D0F26089232F9E64005FA653 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		D0F2608B232F9E64005FA653 /* TriggerCollectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TriggerCollectionViewController.swift; sourceTree = "<group>"; };
 		D0F26090232F9E65005FA653 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		D0F26093232F9E65005FA653 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		D0F26095232F9E65005FA653 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -71,6 +69,7 @@
 		D0C82914233215580077B090 /* View Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				D0C82917233216290077B090 /* TriggerCollectionViewController.swift */,
 			);
 			path = "View Controllers";
 			sourceTree = "<group>";
@@ -97,8 +96,6 @@
 			isa = PBXGroup;
 			children = (
 				D0F26089232F9E64005FA653 /* AppDelegate.swift */,
-				D0F2608B232F9E64005FA653 /* TriggerCollectionViewController.swift */,
-				D0C82915233215740077B090 /* TriggerCollectionViewController.swift */,
 				D0C82914233215580077B090 /* View Controllers */,
 				D0F260B323303398005FA653 /* Model */,
 				D0F260B4233033B2005FA653 /* Resources */,
@@ -238,15 +235,14 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D0C82916233215750077B090 /* TriggerCollectionViewController.swift in Sources */,
 				D0C829122331FD640077B090 /* RequestError.swift in Sources */,
-				D0F2608C232F9E64005FA653 /* TriggerCollectionViewController.swift in Sources */,
 				D0F260B62330F078005FA653 /* Image.swift in Sources */,
 				D0F260B023300509005FA653 /* Applets.swift in Sources */,
 				D0F260AD232F9FBA005FA653 /* Channel.swift in Sources */,
 				D0F575252331A2E100DFBA8E /* RequestManager.swift in Sources */,
 				D0F2608A232F9E64005FA653 /* AppDelegate.swift in Sources */,
 				D0F260AA232F9EC8005FA653 /* appletMockData.swift in Sources */,
+				D0C82918233216290077B090 /* TriggerCollectionViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

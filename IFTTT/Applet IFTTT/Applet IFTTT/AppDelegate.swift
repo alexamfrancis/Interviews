@@ -20,7 +20,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        let collectionViewController = TriggerCollectionViewController(nibName: nil, bundle: nil)
+        let collectionViewController = TriggerCollectionViewController()
         collectionViewController.view.backgroundColor = .white
         collectionViewController.viewDidLoad()
         self.window?.rootViewController = collectionViewController
