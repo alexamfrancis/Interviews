@@ -20,12 +20,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        
-        AppDelegate.shared.window?.rootViewController = TriggerCollectionViewController(nibName: nil, bundle: nil)
-        AppDelegate.shared.window?.makeKeyAndVisible()
+        let collectionViewController = TriggerCollectionViewController(nibName: nil, bundle: nil)
+        collectionViewController.view.backgroundColor = .white
+        collectionViewController.viewDidLoad()
+        self.window?.rootViewController = collectionViewController
+        self.window?.makeKeyAndVisible()
 
         return true
     }
 
 }
-

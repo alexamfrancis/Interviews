@@ -9,9 +9,12 @@
 import UIKit
 
 class TriggerCollectionViewController: UICollectionViewController {
+    let dataSource: App
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.collectionView.delegate = self
+        self.collectionView.dataSource = self
 //        self.collectionView.translatesAutoresizingMaskIntoConstraints = false
 //        self.view.addSubview(self.collectionView)
 //        self.addConstraints()
@@ -24,5 +27,15 @@ class TriggerCollectionViewController: UICollectionViewController {
             self.collectionView.leadingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leadingAnchor),
             self.collectionView.trailingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.trailingAnchor),
             ])
+    }
+    
+//    override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+//        let cell = UICollectionViewCell(frame: .zero)
+//        cell.translatesAutoresizingMaskIntoConstraints = false
+//        return cell
+//    }
+    
+    private func addCellConstraints() {
+        
     }
 }
