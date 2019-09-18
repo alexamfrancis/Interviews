@@ -20,10 +20,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             return false
         }
         let viewController = TriggerCollectionViewController()
-        viewController.viewDidLoad()
         window.rootViewController = viewController
         window.makeKeyAndVisible()
         return true
-        
     }
 }

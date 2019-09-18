@@ -52,6 +52,9 @@ class AppletCollectionViewCell: UICollectionViewCell {
     
     init(id: String, name: String, author: String, description: String) {
         super.init(frame: .zero)
+        self.translatesAutoresizingMaskIntoConstraints = false
+        self.heightAnchor.constraint(equalToConstant: 50.0)
+        self.widthAnchor.constraint(equalToConstant: 50.0)
         self.formatCell()
     }
     
@@ -60,8 +63,6 @@ class AppletCollectionViewCell: UICollectionViewCell {
     }
     
     private func formatCell() {
-        self.contentView.translatesAutoresizingMaskIntoConstraints = false
-        
         self.stackView.addSubview(self.nameLabel)
         self.stackView.addSubview(self.authorLabel)
         self.stackView.addSubview(self.descriptionLabel)
