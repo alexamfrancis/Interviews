@@ -27,7 +27,6 @@ public enum RequestHeaders: String {
 }
 
 public class RequestManager: Alamofire.SessionManager {
-    open func request(_ url: URLRequestConvertible, completion: @escaping (Alamofire.DataRequest) -> Void)
 
     private struct Constant {
         static let jwtTokenResponseHeaderKey: String = "Authorization"
@@ -71,7 +70,7 @@ public class RequestManager: Alamofire.SessionManager {
     }
     
     public override func request(_ urlRequest: URLRequestConvertible) -> DataRequest {
-        urlRequest.validate().responseData(completionHandler: { [weak self] response in
+        urlRequest.responseData(completionHandler: { [weak self] response in
             guard let self = self else { return }
             
             self.reauthIfRequired(with: response, retryRequestBlock: { [weak self] in
@@ -81,52 +80,44 @@ public class RequestManager: Alamofire.SessionManager {
                     self.request(url, completion: completion)
                 }
             })
-        }
+        })
     }
     
+    override public func request(_ url: URLRequestConvertible, completion: @escaping (DataRequest) -> Void) {
+        super.request(url) { [weak self] request in
+            guard let self = self else { return }
+            
+            request.validate().responseData(completionHandler: { [weak self] response in
+                guard let self = self else { return }
+                
+                self.reauthIfRequired(with: response, retryRequestBlock: { [weak self] in
+                    guard let self = self else { return }
+                    
+                    DispatchQueue.main.async {
+                        self.request(url, completion: completion)
+                    }
+                })
+            })
+            
+            completion(request)
+        }
+    }
+
     public func jsonRequest(_ url: URLRequestConvertible, completion: @escaping ([String: Any], [AnyHashable:Any]?) -> Void) {
         self.request(url) { (request) in
             
             request.validate().responseJSON { (response) in
-                let result: FargoCore.Result<[String: Any]>
-                
-                if let serverError = RequestManager.extractServerError(response.data) {
-                    result = .failure(RequestError(underlyingError: serverError, response: response.nonGenericResponse()))
-                } else if let error = response.result.error {
-                    result = .failure(RequestError(underlyingError: error, response: response.nonGenericResponse()))
-                } else if let value = response.result.value as? [String: Any] {
-                    result = .success(value)
-                } else {
-                    let underlyingError = SpecificRequestError.invalidResponse("Failed to cast response to 'ServerResponseType'")
-                    result = .failure(RequestError(underlyingError: underlyingError, response: response.nonGenericResponse()))
-                }
+                let result: [String: Any]
                 
                 completion(result, response.response?.allHeaderFields)
             }
         }
     }
-    
-    /// A convenient way to call `RequestManager.request()` and get the result in a wrapped success-with-data-or-failure-with-error type.
-    ///
-    /// This function expects the given url to return a 'no content' response (i.e. a 204 HTTP status code).
-    ///
-    /// The following steps are performed:
-    /// 1. Calls `RequestManager.request`.
-    /// 2. Wraps an 'empty' success - or error, if any - in a `Result`.
     public func dataRequest(_ url: URLRequestConvertible, completion: @escaping (FargoCore.Result<Void>) -> Void) {
         self.request(url) { (request) in
             
             request.validate().responseData { (response) in
-                let result: FargoCore.Result<Void>
-                
-                if let error = response.result.error {
-                    let serverError = RequestManager.extractServerError(response.data) ?? error
-                    result = .failure(RequestError(underlyingError: serverError, response: response.nonGenericResponse()))
-                } else {
-                    result = .success(())
-                }
-                
-                completion(result)
+                return response
             }
         }
     }
