@@ -34,9 +34,9 @@ public class RequestManager: Alamofire.SessionManager {
     
     // Defaults
     private struct Defaults {
-        static let serverProtocol = "http"
-        static let serverHostname = "example.com"
-        static let serverServicesPath = "/ExampleService/v1"
+        static let serverProtocol = "https"
+        static let serverHostname = "assets.ifttt.com"
+        static let serverServicesPath = "/images/channels"
         static let requestTimeoutInSec = 20
     }
     
@@ -44,24 +44,18 @@ public class RequestManager: Alamofire.SessionManager {
     private(set) static var serverProtocol: String        = Defaults.serverProtocol
     private(set) static var serverHostname: String        = Defaults.serverHostname
     private(set) static var serverServicesPath: String    = Defaults.serverServicesPath
-    private(set) static var requestTimeoutInSec: Int    = Defaults.requestTimeoutInSec
     
     /// computed property which constructs the server's base url (so that the endpoint can be tacked onto the end)
+    // https://assets.ifttt.com
     public static var serverBaseUrl: String {
         let url = "\(RequestManager.serverProtocol)://\(RequestManager.serverHostname)\(RequestManager.serverServicesPath)"
         assert(URL(string: url) != nil, "Invalid server url: \(url)")
         return url
     }
     
-    public init(skipAuthenticator: Bool = false) {
+    public init() {
         let configuration = URLSessionConfiguration.ephemeral
         configuration.requestCachePolicy = NSURLRequest.CachePolicy.reloadIgnoringCacheData
-        
-        // How long to wait for additional data before giving up. Whenever new data arrives, this timer is reset. Default is 60 sec.
-        configuration.timeoutIntervalForRequest = TimeInterval(RequestManager.requestTimeoutInSec)
-        // How long to wait for an entire resource to transfer before giving up. Default is 7 days.
-        configuration.timeoutIntervalForResource = TimeInterval(RequestManager.requestTimeoutInSec)
-        
         
         // Note: Once Alamofire.Manager creates a NSURLSession with the given configuration, it is not possible to change the configuration and have those changes take effect.
         // A new Alamofire.Manager instance must be created in order to change the configuration.
@@ -69,17 +63,15 @@ public class RequestManager: Alamofire.SessionManager {
         
     }
 
-    public func jsonRequest(_ url: URLRequestConvertible, completion: @escaping ([String: Any], [AnyHashable:Any]?) -> Void) {
-        request(url)
-        
-        self.request(url) {
-            completion(request.ifSuccess())
-            request.validate().responseJSON { (response) in
-                let result: [String: Any]
-                completion(result, response.response?.allHeaderFields)
-            }
-        }
-    }
+//    public func jsonRequest(_ url: URLRequestConvertible, completion: @escaping ([String: Any], [AnyHashable: Any]?) -> Void) {
+//        self.request(url as! URLConvertible) {
+//            request.validate().responseJSON { (response) in
+//                let result: [String: Any]
+//                completion(result, response.response?.allHeaderFields)
+//            }
+//        }
+//    }
+}
     
 //    public func objectRequest<T: Decodable>(_ url: URLConvertible, keyPath: String? = nil, completion: @escaping (FargoCore.Result<T>, String?) -> Void) {
 //        self.request(url) { (request) in
@@ -103,5 +95,3 @@ public class RequestManager: Alamofire.SessionManager {
 //            }
 //        }
 //    }
-
-}
