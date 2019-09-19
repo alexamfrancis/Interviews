@@ -7,7 +7,6 @@
 //
 
 import UIKit
-import AVFoundation
 
 class PlayingSoundViewController: UIViewController {
     private struct Constants {
@@ -15,7 +14,6 @@ class PlayingSoundViewController: UIViewController {
         static let height: CGFloat = 100.0
     }
     
-    var player: AVAudioPlayer?
     var soundTitle: String
     var stopButton: UIButton = {
         let button = UIButton(frame: .zero)
@@ -26,8 +24,8 @@ class PlayingSoundViewController: UIViewController {
         return button
     }()
     
-    init(soundTitle: String) {
-        self.soundTitle = soundTitle
+    init(applet: Applet) {
+        self.soundTitle = applet.name ?? "ALEXA NAME FAILED"
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -38,26 +36,6 @@ class PlayingSoundViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.setupStopButton()
-        self.player?.numberOfLoops = -1
-        guard let url = Bundle.main.url(forResource: self.soundTitle, withExtension: "mp3") else { return }
-        
-        do {
-            try AVAudioSession.sharedInstance().setCategory(.playback, mode: .default)
-            try AVAudioSession.sharedInstance().setActive(true)
-            
-            /* The following line is required for the player to work on iOS 11. Change the file type accordingly*/
-            self.player = try AVAudioPlayer(contentsOf: url, fileTypeHint: AVFileType.mp3.rawValue)
-            
-            /* iOS 10 and earlier require the following line:
-             player = try AVAudioPlayer(contentsOf: url, fileTypeHint: AVFileTypeMPEGLayer3) */
-            
-            guard let player = self.player else { return }
-            
-            player.play()
-            
-        } catch let error {
-            print(error.localizedDescription)
-        }
     }
 
     private func setupStopButton() {
@@ -75,7 +53,6 @@ class PlayingSoundViewController: UIViewController {
     }
     
     @objc private func stopSound() {
-        self.player?.stop()
         self.dismiss(animated: true)
     }
 }
