@@ -18,17 +18,17 @@ struct Applet {
     var id: String?
     var created: String?
     var serviceSlug: String?
-    var serviceOwner: String?
+    var serviceOwner: Bool?
     var name: String?
     var description: String?
     var brandColor: String?
     var status: String?
     var author: String?
-    var installCount: String?
+    var installCount: Int?
     var backgroundImages: String?
     var userFeedback: String?
     var channels: [Channel]
-    
+    var valuePropositions: String?
 }
 
 extension Applet: Codable {
@@ -46,6 +46,7 @@ extension Applet: Codable {
         case installCount
         case backgroundImages
         case userFeedback
+        case valuePropositions
         case channels
         
         var codingKey: String {
@@ -76,6 +77,8 @@ extension Applet: Codable {
                 return "applet_feedback_by_user"
             case .channels:
                 return "channels"
+            case .valuePropositions:
+                return "value_propositions"
             }
         }
         
@@ -95,17 +98,18 @@ extension Applet: Codable {
         self.id = try container.decode(String.self, forKey: .id)
         self.created = try container.decode(String.self, forKey: .created)
         self.serviceSlug = try container.decode(String.self, forKey: .serviceSlug)
-        self.serviceOwner = try container.decode(String.self, forKey: .serviceOwner)
+        self.serviceOwner = try container.decode(Bool.self, forKey: .serviceOwner)
         self.name = try container.decode(String.self, forKey: .name)
         self.id = try container.decode(String.self, forKey: .id)
         self.description = try container.decode(String.self, forKey: .description)
         self.brandColor = try container.decode(String.self, forKey: .brandColor)
         self.status = try container.decode(String.self, forKey: .status)
         self.author = try container.decode(String.self, forKey: .author)
-        self.installCount = try container.decode(String.self, forKey: .installCount)
+        self.installCount = try container.decode(Int.self, forKey: .installCount)
         self.backgroundImages = try container.decode(String.self, forKey: .backgroundImages)
         self.userFeedback = try container.decode(String.self, forKey: .userFeedback)
         self.channels = try container.decode([Channel].self, forKey: .channels)
+        self.valuePropositions = try container.decode(String.self, forKey: .valuePropositions)
     }
     
 }
