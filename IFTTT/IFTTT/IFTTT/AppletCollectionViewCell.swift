@@ -93,7 +93,7 @@ class AppletCollectionViewCell: UICollectionViewCell {
     func formatCell() {
         self.clipsToBounds = true
         self.layer.cornerRadius = Constants.diameter / 2
-        self.backgroundColor = .appletBackgroundColor
+        self.backgroundColor = .orangeAppletBackgroundColor
         NSLayoutConstraint.activate([
             self.heightAnchor.constraint(equalToConstant: Constants.diameter),
             self.widthAnchor.constraint(equalToConstant: Constants.diameter)

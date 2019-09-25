@@ -13,8 +13,7 @@ class ViewController: UIViewController {
     private struct Constants {
         /// Margin from right anchor of safe area to right anchor of Image
         static let collectionViewVerticalInset: CGFloat = 2.0
-        static let estimatedItemHeight: CGFloat = 150.0
-        static let standardSpacing: CGFloat = 16.0
+        static let standardSpacing: CGFloat = 8.0
     }
 
     private var collectionViewLayout = UICollectionViewFlowLayout()
@@ -47,7 +46,7 @@ class ViewController: UIViewController {
         NSLayoutConstraint.activate([
             self.collectionView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
             self.collectionView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
-            self.collectionView.topAnchor.constraint(equalTo: self.view.topAnchor),
+            self.collectionView.topAnchor.constraint(equalTo: self.view.topAnchor, constant: Constants.standardSpacing),
             self.collectionView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor)
             ])
     }
@@ -56,8 +55,6 @@ class ViewController: UIViewController {
         self.view.backgroundColor = .white
         self.collectionView.backgroundColor = .white
         self.collectionViewLayout.estimatedItemSize = UICollectionViewFlowLayout.automaticSize
-        self.collectionViewLayout.minimumInteritemSpacing = Constants.standardSpacing
-        self.collectionViewLayout.minimumLineSpacing = Constants.standardSpacing
         self.collectionViewLayout.sectionInset = UIEdgeInsets(top: Constants.collectionViewVerticalInset, left: Constants.standardSpacing, bottom: Constants.collectionViewVerticalInset, right: Constants.standardSpacing)
         self.collectionView.collectionViewLayout = self.collectionViewLayout
         self.collectionView.dataSource = self
