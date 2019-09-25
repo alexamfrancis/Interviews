@@ -89,13 +89,6 @@ extension ViewController: UICollectionViewDataSource, UICollectionViewDelegate, 
         collectionView.deselectItem(at: indexPath, animated: true)
         let applet = self.cellDataSource[indexPath.row]
         let viewController = AppletDetailViewController(applet)
-        guard let navVC = self.navigationController else {
-            print("no navigation controller NavVC")
-            return
-        }
-        
-        navVC.navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(viewController.dismiss))
-        navVC.present(viewController, animated: true, completion: nil)
-//        self.present(viewController, animated: true, completion: nil)
+        self.navigationController?.present(viewController, animated: true, completion: nil)
     }
 }
