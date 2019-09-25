@@ -23,6 +23,11 @@ class AppletDetailViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.view.backgroundColor = .green
-        self.navigationController?.navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(self.dismiss(animated:completion:)))
+        
+        self.navigationController?.navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(self.dismissView))
+    }
+    
+    @objc private func dismissView() {
+        self.dismiss(animated: true, completion: nil)
     }
 }

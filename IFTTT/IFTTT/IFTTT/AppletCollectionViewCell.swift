@@ -10,9 +10,10 @@ import UIKit
 
 class AppletCollectionViewCell: UICollectionViewCell {
     struct Constants {
-        static let standardMargin: CGFloat = 16.0
-        static let iconDimensions: CGFloat = 20.0
-        static let diameter: CGFloat = UIScreen.main.bounds.width / 2
+        static let standardMargin: CGFloat = 32.0
+        static let spacing: CGFloat = 32.0
+        static let iconDimensions: CGFloat = 44.0
+        static let diameter: CGFloat = UIScreen.main.bounds.width / 1.5
     }
 
     var idLabel: UILabel = {
@@ -26,6 +27,8 @@ class AppletCollectionViewCell: UICollectionViewCell {
         let label = UILabel(frame: .zero)
         label.translatesAutoresizingMaskIntoConstraints = false
         label.textColor = .white
+        label.numberOfLines = 0
+        label.lineBreakMode = .byWordWrapping
         return label
     }()
     
@@ -33,6 +36,8 @@ class AppletCollectionViewCell: UICollectionViewCell {
         let label = UILabel(frame: .zero)
         label.translatesAutoresizingMaskIntoConstraints = false
         label.textColor = .white
+        label.numberOfLines = 0
+        label.lineBreakMode = .byWordWrapping
         return label
     }()
     
@@ -69,13 +74,12 @@ class AppletCollectionViewCell: UICollectionViewCell {
     }
     
     func formatCell() {
-        self.contentView.translatesAutoresizingMaskIntoConstraints = false
         self.clipsToBounds = true
         self.layer.cornerRadius = Constants.diameter / 2
         self.backgroundColor = .purple
         NSLayoutConstraint.activate([
-            self.contentView.heightAnchor.constraint(equalToConstant: Constants.diameter),
-            self.contentView.widthAnchor.constraint(equalToConstant: Constants.diameter)
+            self.heightAnchor.constraint(equalToConstant: Constants.diameter),
+            self.widthAnchor.constraint(equalToConstant: Constants.diameter)
             ])
         
     }
@@ -90,17 +94,17 @@ class AppletCollectionViewCell: UICollectionViewCell {
     
     func addConstraints() {
         NSLayoutConstraint.activate([
-            self.iconImage.topAnchor.constraint(equalTo: self.safeAreaLayoutGuide.topAnchor, constant: Constants.standardMargin),
+            self.iconImage.centerYAnchor.constraint(equalTo: self.centerYAnchor),
             self.iconImage.leadingAnchor.constraint(equalTo: self.safeAreaLayoutGuide.leadingAnchor, constant: Constants.standardMargin),
             self.iconImage.heightAnchor.constraint(equalToConstant: Constants.iconDimensions),
             self.iconImage.widthAnchor.constraint(equalToConstant: Constants.iconDimensions),
             
             self.nameLabel.topAnchor.constraint(equalTo: self.safeAreaLayoutGuide.topAnchor, constant: Constants.standardMargin),
-            self.nameLabel.leadingAnchor.constraint(equalTo: self.iconImage.trailingAnchor, constant: Constants.standardMargin),
+            self.nameLabel.leadingAnchor.constraint(equalTo: self.iconImage.trailingAnchor, constant: Constants.spacing),
             self.nameLabel.trailingAnchor.constraint(equalTo: self.safeAreaLayoutGuide.trailingAnchor, constant: -Constants.standardMargin),
-            self.nameLabel.bottomAnchor.constraint(equalTo: self.authorLabel.topAnchor, constant: -Constants.standardMargin),
+            self.nameLabel.bottomAnchor.constraint(equalTo: self.authorLabel.topAnchor),
             
-            self.authorLabel.leadingAnchor.constraint(equalTo: self.iconImage.trailingAnchor, constant: Constants.standardMargin),
+            self.authorLabel.leadingAnchor.constraint(equalTo: self.iconImage.trailingAnchor, constant: Constants.spacing),
             self.authorLabel.trailingAnchor.constraint(equalTo: self.safeAreaLayoutGuide.trailingAnchor, constant: -Constants.standardMargin),
             self.authorLabel.bottomAnchor.constraint(equalTo: self.safeAreaLayoutGuide.bottomAnchor, constant: -Constants.standardMargin)
             

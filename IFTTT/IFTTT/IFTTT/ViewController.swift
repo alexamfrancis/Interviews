@@ -84,28 +84,18 @@ extension ViewController: UICollectionViewDataSource, UICollectionViewDelegate, 
         cell.reloadInputViews()
         return cell
     }
-    
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        let appletDiameter: CGFloat = UIScreen.main.bounds.width / 4
-        return CGSize(width: appletDiameter, height: appletDiameter)
-//        guard collectionViewLayout is UICollectionViewFlowLayout else {
-//            print("UICollectionViewFlowLayout failed to initialize properly")
-//            return .zero
-//        }
-//
-//        self.appletCell.configure(applet: self.cellDataSource[indexPath.row])
-//        
-//        self.appletCell.contentView.setNeedsLayout()
-//        self.appletCell.contentView.layoutIfNeeded()
-//        let layoutSize = self.appletCell.systemLayoutSizeFitting(CGSize(width: UIView.layoutFittingCompressedSize.height, height: UIView.layoutFittingCompressedSize.height))
-//        return CGSize(width: layoutSize.height, height: layoutSize.height)
-    }
-    
+        
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         collectionView.deselectItem(at: indexPath, animated: true)
         let applet = self.cellDataSource[indexPath.row]
         let viewController = AppletDetailViewController(applet)
-        self.navigationController?.present(viewController, animated: true, completion: nil)
+        guard let navVC = self.navigationController else {
+            print("no navigation controller NavVC")
+            return
+        }
+        
+        navVC.navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(viewController.dismiss))
+        navVC.present(viewController, animated: true, completion: nil)
 //        self.present(viewController, animated: true, completion: nil)
     }
 }
