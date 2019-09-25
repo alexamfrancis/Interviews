@@ -70,8 +70,8 @@
 			children = (
 				D0A096E22335B853003770B9 /* AppDelegate.swift */,
 				D0A096E42335B853003770B9 /* ViewController.swift */,
-				D0A096FE233A5E38003770B9 /* AppletDetailViewController.swift */,
 				D0A096F42335B8F7003770B9 /* AppletCollectionViewCell.swift */,
+				D0A096FE233A5E38003770B9 /* AppletDetailViewController.swift */,
 				D0A09703233AEBFE003770B9 /* Extensions */,
 				D0A09702233AEBF4003770B9 /* Models */,
 				D0A096E92335B855003770B9 /* Assets.xcassets */,
