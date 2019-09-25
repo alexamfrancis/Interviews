@@ -24,6 +24,9 @@ class ViewController: UIViewController {
     init() {
         self.collectionView = UICollectionView(frame: .zero, collectionViewLayout: self.collectionViewLayout)
         super.init(nibName: nil, bundle: nil)
+        self.cellDataSource.sort { (applet1, applet2) -> Bool in
+            return applet1.status == .enabled
+        }
     }
     
     required init?(coder aDecoder: NSCoder) {

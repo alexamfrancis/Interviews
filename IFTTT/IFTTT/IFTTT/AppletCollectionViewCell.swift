@@ -15,13 +15,6 @@ class AppletCollectionViewCell: UICollectionViewCell {
         static let iconDimensions: CGFloat = 44.0
         static let diameter: CGFloat = UIScreen.main.bounds.width / 1.5
     }
-
-//    var idLabel: UILabel = {
-//        let label = UILabel(frame: .zero)
-//        label.translatesAutoresizingMaskIntoConstraints = false
-//        label.textColor = .white
-//        return label
-//    }()
     
     var nameLabel: UILabel = {
         let label = UILabel(frame: .zero)
@@ -43,7 +36,8 @@ class AppletCollectionViewCell: UICollectionViewCell {
     
     var channelsButton: UIButton = {
         let channelsButton = UIButton(type: .custom)
-        channelsButton.setTitle("Channels", for: .normal)
+        channelsButton.setTitle("View Channels", for: .normal)
+        channelsButton.setTitleColor(.blue, for: .normal)
         channelsButton.titleLabel?.font = UIFont.preferredFont(forTextStyle: .subheadline)
         return channelsButton
     }()
@@ -64,7 +58,7 @@ class AppletCollectionViewCell: UICollectionViewCell {
         stackView.backgroundColor = .clear
         stackView.axis = .vertical
         stackView.alignment = .leading
-        stackView.distribution = UIStackView.Distribution.equalCentering
+        stackView.distribution = .equalSpacing
         return stackView
     }()
 
@@ -77,6 +71,7 @@ class AppletCollectionViewCell: UICollectionViewCell {
         self.nameLabel.text = applet.name
         self.authorLabel.text = applet.author
         self.iconImage.image = self.getImage()
+        self.channelsButton.addTarget(self, action: #selector(self.showChannels), for: UIControl.Event.touchDown)
 
         self.addSubview(self.iconImage)
         self.stackView.addArrangedSubview(self.nameLabel)
@@ -86,7 +81,12 @@ class AppletCollectionViewCell: UICollectionViewCell {
         
         self.addConstraints()
     }
-    
+    @objc func showChannels() {
+        let channels: [String] = self.applet?.channels?.map({ channel -> String in
+            return channel.name
+        }) ?? []
+        self.channelsButton.setTitle(channels.joined(separator: ", ") , for: .normal)
+    }
     func formatCell() {
         self.clipsToBounds = true
         self.layer.cornerRadius = Constants.diameter / 2
