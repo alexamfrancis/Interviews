@@ -11,39 +11,35 @@ import UIKit
 class AppletCollectionViewCell: UICollectionViewCell {
     struct Constants {
         static let standardMargin: CGFloat = 16.0
-        static let iconDimensions: CGFloat = 10.0
-        static let diameter: CGFloat = 44.0
+        static let iconDimensions: CGFloat = 20.0
+        static let diameter: CGFloat = UIScreen.main.bounds.width / 2
     }
 
     var idLabel: UILabel = {
         let label = UILabel(frame: .zero)
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "MY APPLET ID"
-        label.textColor = .red
+        label.textColor = .white
         return label
     }()
     
     var nameLabel: UILabel = {
         let label = UILabel(frame: .zero)
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "MY APPLET"
-        label.textColor = .red
+        label.textColor = .white
         return label
     }()
     
     var authorLabel: UILabel = {
         let label = UILabel(frame: .zero)
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "ALEXA FRANCIS"
-        label.textColor = .red
+        label.textColor = .white
         return label
     }()
     
     var descriptionLabel: UILabel = {
         let label = UILabel(frame: .zero)
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "DESCRIPTION"
-        label.textColor = .red
+        label.textColor = .white
         return label
     }()
     
@@ -79,9 +75,7 @@ class AppletCollectionViewCell: UICollectionViewCell {
         self.backgroundColor = .purple
         NSLayoutConstraint.activate([
             self.contentView.heightAnchor.constraint(equalToConstant: Constants.diameter),
-            self.contentView.widthAnchor.constraint(equalToConstant: Constants.diameter),
-            self.contentView.leadingAnchor.constraint(equalTo: self.leadingAnchor),
-            self.contentView.trailingAnchor.constraint(equalTo: self.trailingAnchor)
+            self.contentView.widthAnchor.constraint(equalToConstant: Constants.diameter)
             ])
         
     }

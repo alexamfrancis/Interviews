@@ -9,33 +9,12 @@
 import UIKit
 
 struct MockData: Codable {
-    
-//    static let data: [Applet] = {
-//        var appletArray = [Applet]()
-//        let mockData: [String: Any] = MockData.responseString
-//        guard let array = mockData["live_applets"] as? [Any] else {
-//            print("error with grabbing the live_applets array of dictionaries")
-//            return appletArray
-//        }
-//        var applets = [Applet]()
-//
-//        for applet in array {
-//            guard let decoded = try? JSONDecoder().decode(Applet.self, from: mockData) else {
-//                print("what")
-//                return appletArray
-//            }
-//            if let decoded = try? JSONDecoder().decode(Applet.self, from: applet) {
-//                applets.append(decoded)
-//            }
-//        }
-//        return applets
-//    }()
+
     static let applets: [Applet] = {
         guard let json = MockData.shared["live_applets"] as? [[String: Any]] else { return [] }
         do {
             let array = try JSONSerialization.data(withJSONObject: json)
             let decoder = JSONDecoder()
-            decoder.keyDecodingStrategy = .convertFromSnakeCase
             let decodedApplets = try decoder.decode([Applet].self, from: array)
             decodedApplets.forEach{print($0)}
             return decodedApplets

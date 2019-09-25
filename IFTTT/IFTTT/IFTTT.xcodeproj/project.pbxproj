@@ -17,6 +17,7 @@
 		D0A096FB233923C0003770B9 /* Channel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0A096FA233923C0003770B9 /* Channel.swift */; };
 		D0A096FD23396627003770B9 /* CollectionView+Additions.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0A096FC23396627003770B9 /* CollectionView+Additions.swift */; };
 		D0A096FF233A5E38003770B9 /* AppletDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0A096FE233A5E38003770B9 /* AppletDetailViewController.swift */; };
+		D0A09701233AEBCC003770B9 /* Date+Additions.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0A09700233AEBCC003770B9 /* Date+Additions.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -32,6 +33,7 @@
 		D0A096FA233923C0003770B9 /* Channel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Channel.swift; sourceTree = "<group>"; };
 		D0A096FC23396627003770B9 /* CollectionView+Additions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CollectionView+Additions.swift"; sourceTree = "<group>"; };
 		D0A096FE233A5E38003770B9 /* AppletDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppletDetailViewController.swift; sourceTree = "<group>"; };
+		D0A09700233AEBCC003770B9 /* Date+Additions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+Additions.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -65,18 +67,35 @@
 			isa = PBXGroup;
 			children = (
 				D0A096E22335B853003770B9 /* AppDelegate.swift */,
-				D0A096F42335B8F7003770B9 /* AppletCollectionViewCell.swift */,
-				D0A096FE233A5E38003770B9 /* AppletDetailViewController.swift */,
-				D0A096FC23396627003770B9 /* CollectionView+Additions.swift */,
-				D0A096F82335BA38003770B9 /* MockData.swift */,
-				D0A096F62335B945003770B9 /* Applet.swift */,
-				D0A096FA233923C0003770B9 /* Channel.swift */,
 				D0A096E42335B853003770B9 /* ViewController.swift */,
+				D0A096FE233A5E38003770B9 /* AppletDetailViewController.swift */,
+				D0A096F42335B8F7003770B9 /* AppletCollectionViewCell.swift */,
+				D0A09703233AEBFE003770B9 /* Extensions */,
+				D0A09702233AEBF4003770B9 /* Models */,
 				D0A096E92335B855003770B9 /* Assets.xcassets */,
 				D0A096EB2335B855003770B9 /* LaunchScreen.storyboard */,
 				D0A096EE2335B855003770B9 /* Info.plist */,
 			);
 			path = IFTTT;
+			sourceTree = "<group>";
+		};
+		D0A09702233AEBF4003770B9 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				D0A096F82335BA38003770B9 /* MockData.swift */,
+				D0A096F62335B945003770B9 /* Applet.swift */,
+				D0A096FA233923C0003770B9 /* Channel.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		D0A09703233AEBFE003770B9 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				D0A096FC23396627003770B9 /* CollectionView+Additions.swift */,
+				D0A09700233AEBCC003770B9 /* Date+Additions.swift */,
+			);
+			path = Extensions;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -155,6 +174,7 @@
 				D0A096F72335B945003770B9 /* Applet.swift in Sources */,
 				D0A096E32335B853003770B9 /* AppDelegate.swift in Sources */,
 				D0A096F52335B8F7003770B9 /* AppletCollectionViewCell.swift in Sources */,
+				D0A09701233AEBCC003770B9 /* Date+Additions.swift in Sources */,
 				D0A096FF233A5E38003770B9 /* AppletDetailViewController.swift in Sources */,
 				D0A096F92335BA38003770B9 /* MockData.swift in Sources */,
 			);
