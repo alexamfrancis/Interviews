@@ -21,7 +21,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             return false
         }
         let viewController = ViewController()
-        window.rootViewController = viewController
+        let navigationViewController = UINavigationController(rootViewController: viewController)
+        window.rootViewController = navigationViewController
         window.makeKeyAndVisible()
         return true
         

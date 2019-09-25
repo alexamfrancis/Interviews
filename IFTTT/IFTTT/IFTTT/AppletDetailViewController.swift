@@ -14,7 +14,6 @@ class AppletDetailViewController: UIViewController {
     init(_ applet: Applet) {
         self.applet = applet
         super.init(nibName: nil, bundle: nil)
-        
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -24,5 +23,6 @@ class AppletDetailViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.view.backgroundColor = .green
+        self.navigationController?.navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(self.dismiss(animated:completion:)))
     }
 }
