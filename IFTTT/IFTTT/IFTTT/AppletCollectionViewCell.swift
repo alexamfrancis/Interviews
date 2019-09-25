@@ -25,17 +25,15 @@ class AppletCollectionViewCell: UICollectionViewCell {
     
     var nameLabel: UILabel = {
         let label = UILabel(frame: .zero)
-//        label.translatesAutoresizingMaskIntoConstraints = false
         label.textColor = .white
         label.numberOfLines = 0
-        label.font = UIFont.preferredFont(forTextStyle: .subheadline)
+        label.font = UIFont.preferredFont(forTextStyle: .headline)
         label.lineBreakMode = .byWordWrapping
         return label
     }()
     
     var authorLabel: UILabel = {
         let label = UILabel(frame: .zero)
-//        label.translatesAutoresizingMaskIntoConstraints = false
         label.textColor = .white
         label.numberOfLines = 0
         label.lineBreakMode = .byWordWrapping
@@ -43,12 +41,12 @@ class AppletCollectionViewCell: UICollectionViewCell {
         return label
     }()
     
-//    var descriptionLabel: UILabel = {
-//        let label = UILabel(frame: .zero)
-//        label.translatesAutoresizingMaskIntoConstraints = false
-//        label.textColor = .white
-//        return label
-//    }()
+    var channelsButton: UIButton = {
+        let channelsButton = UIButton(type: .custom)
+        channelsButton.setTitle("Channels", for: .normal)
+        channelsButton.titleLabel?.font = UIFont.preferredFont(forTextStyle: .subheadline)
+        return channelsButton
+    }()
     
     var iconImage: UIImageView = {
         let image = UIImageView(frame: .zero)
@@ -67,8 +65,6 @@ class AppletCollectionViewCell: UICollectionViewCell {
         stackView.axis = .vertical
         stackView.alignment = .leading
         stackView.distribution = UIStackView.Distribution.equalCentering
-//        stackView.spacing = Constants.spacing
-//        stackView.layer.cornerRadius = Constants.iconDimensions / 2
         return stackView
     }()
 
@@ -85,6 +81,7 @@ class AppletCollectionViewCell: UICollectionViewCell {
         self.addSubview(self.iconImage)
         self.stackView.addArrangedSubview(self.nameLabel)
         self.stackView.addArrangedSubview(self.authorLabel)
+        self.stackView.addArrangedSubview(self.channelsButton)
         self.addSubview(self.stackView)
         
         self.addConstraints()
@@ -93,7 +90,7 @@ class AppletCollectionViewCell: UICollectionViewCell {
     func formatCell() {
         self.clipsToBounds = true
         self.layer.cornerRadius = Constants.diameter / 2
-        self.backgroundColor = .orangeAppletBackgroundColor
+        self.backgroundColor = self.applet?.status ?? .disabled == .enabled ? .orangeAppletBackgroundColor : .disabledAppletBackgroundColor
         NSLayoutConstraint.activate([
             self.heightAnchor.constraint(equalToConstant: Constants.diameter),
             self.widthAnchor.constraint(equalToConstant: Constants.diameter)
@@ -120,19 +117,7 @@ class AppletCollectionViewCell: UICollectionViewCell {
             self.stackView.leadingAnchor.constraint(equalTo: self.iconImage.trailingAnchor, constant: Constants.spacing),
             self.stackView.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -Constants.standardMargin),
             self.stackView.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -Constants.standardMargin)
-            
-//            self.stackView.trailingAnchor.constraint(equalTo: self.safeAreaLayoutGuide.trailingAnchor),
-//
-//            self.nameLabel.topAnchor.constraint(equalTo: self.safeAreaLayoutGuide.topAnchor),
-//            self.nameLabel.leadingAnchor.constraint(equalTo: self.iconImage.trailingAnchor, constant: Constants.spacing),
-//            self.nameLabel.trailingAnchor.constraint(equalTo: self.safeAreaLayoutGuide.trailingAnchor, constant: -Constants.spacing),
-//
-//            self.authorLabel.topAnchor.constraint(equalTo: self.nameLabel.bottomAnchor),
-//            self.authorLabel.leadingAnchor.constraint(equalTo: self.iconImage.trailingAnchor, constant: Constants.spacing),
-//            self.authorLabel.trailingAnchor.constraint(equalTo: self.safeAreaLayoutGuide.trailingAnchor, constant: -Constants.standardMargin),
-//            self.authorLabel.bottomAnchor.constraint(equalTo: self.safeAreaLayoutGuide.bottomAnchor, constant: -Constants.standardMargin)
-//
-            ])
+        ])
     }
 
 }

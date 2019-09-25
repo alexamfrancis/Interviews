@@ -22,7 +22,7 @@ struct Applet {
     var name: String?
     var description: String?
     var brandColor: String?
-    var status: String?
+    var status: Status?
     var author: String?
     var installCount: Int?
     var backgroundImages: BackgroundImages?
@@ -47,6 +47,12 @@ extension Applet: Codable {
         case userFeedback = "applet_feedback_by_user"
         case valuePropositions = "value_propositions"
         case channels
+    }
+    
+    enum Status: String, Codable {
+        case enabled = "enabled_for_user"
+        case disabled = "disabled_for_user"
+        case neverEnabled = "never_enabled_for_user"
     }
     
     struct BackgroundImages: Codable {
@@ -79,7 +85,7 @@ extension Applet: Codable {
         self.name = try? container.decode(String?.self, forKey: .name)
         self.description = try? container.decode(String?.self, forKey: .description)
         self.brandColor = try? container.decode(String?.self, forKey: .brandColor)
-        self.status = try? container.decode(String?.self, forKey: .status)
+        self.status = try? container.decode(Status?.self, forKey: .status)
         self.author = try? container.decode(String?.self, forKey: .author)
         self.installCount = try? container.decode(Int?.self, forKey: .installCount)
         self.backgroundImages = try? container.decode(BackgroundImages?.self, forKey: .backgroundImages)
