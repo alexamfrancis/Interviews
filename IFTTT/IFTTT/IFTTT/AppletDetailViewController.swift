@@ -30,11 +30,11 @@ class AppletDetailViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.view.clipsToBounds = true
-        self.view.backgroundColor = .disabledAppletBackgroundColor
+        self.view.frame = .zero
+        self.viewWillLayoutSubviews()
         self.view.translatesAutoresizingMaskIntoConstraints = false
         self.addConstraints()
-        self.view.layer.cornerRadius = UIScreen.main.bounds.width / 2
+        self.view.layer.cornerRadius = self.diameter / 2
         self.view.backgroundColor = self.applet.status == .enabled ? .orangeAppletBackgroundColor
             : .disabledAppletBackgroundColor
         let swipeDown = UISwipeGestureRecognizer(target: self, action: #selector(self.dismissView))
@@ -43,13 +43,26 @@ class AppletDetailViewController: UIViewController {
         self.navigationItem.rightBarButtonItem = self.doneButtonItem
     }
     
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        self.view.clipsToBounds = true
+        self.view.translatesAutoresizingMaskIntoConstraints = false
+        self.addConstraints()
+        self.view.layer.cornerRadius = self.diameter / 2
+    }
+    
     private func addConstraints() {
+        self.view.removeConstraints(self.view.constraints)
+        guard let navigationView = self.navigationController?.view else {
+            print("no navigation view controller in the applet detail screen")
+            return
+        }
         NSLayoutConstraint.activate([
-//            self.view.centerXAnchor.constraint(equalTo: self.view.superview?.centerXAnchor),
-//            self.view.centerYAnchor.constraint(equalTo: self.view.superview?.centerYAnchor),
             self.view.widthAnchor.constraint(equalToConstant: self.diameter),
-            self.view.heightAnchor.constraint(equalToConstant: UIScreen.main.bounds.width)
+            self.view.heightAnchor.constraint(equalToConstant: self.diameter)
             ])
+        self.view.bounds = CGRect(x: navigationView.frame.width - self.diameter, y: navigationView.frame.minY + self.diameter, width: self.diameter, height: self.diameter)
+        self.viewDidLayoutSubviews()
     }
     
     @objc private func dismissView() {
