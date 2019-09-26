@@ -89,6 +89,7 @@ extension ViewController: UICollectionViewDataSource, UICollectionViewDelegate, 
         collectionView.deselectItem(at: indexPath, animated: true)
         let applet = self.cellDataSource[indexPath.row]
         let viewController = AppletDetailViewController(applet)
-        self.navigationController?.present(viewController, animated: true, completion: nil)
+        let navigationController = UINavigationController(rootViewController: viewController)
+        self.navigationController?.present(navigationController, animated: true, completion: nil)
     }
 }

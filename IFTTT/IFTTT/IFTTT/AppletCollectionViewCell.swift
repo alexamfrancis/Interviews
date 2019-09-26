@@ -71,7 +71,7 @@ class AppletCollectionViewCell: UICollectionViewCell {
         self.nameLabel.text = applet.name
         self.authorLabel.text = applet.author
         self.iconImage.image = self.getImage()
-        self.channelsButton.addTarget(self, action: #selector(self.showChannels), for: UIControl.Event.touchDown)
+//        self.channelsButton.addTarget(self, action: #selector(self.showChannels), for: UIControl.Event.touchDown)
 
         self.addSubview(self.iconImage)
         self.stackView.addArrangedSubview(self.nameLabel)
@@ -81,12 +81,13 @@ class AppletCollectionViewCell: UICollectionViewCell {
         
         self.addConstraints()
     }
-    @objc func showChannels() {
-        let channels: [String] = self.applet?.channels?.map({ channel -> String in
-            return channel.name
-        }) ?? []
-        self.channelsButton.setTitle(channels.joined(separator: ", ") , for: .normal)
-    }
+//    @objc func showChannels() {
+//
+//        let channels: [String] = self.applet?.channels?.map({ channel -> String in
+//            return channel.name
+//        }) ?? []
+//        self.channelsButton.setTitle(channels.joined(separator: ", ") , for: .normal)
+//    }
     func formatCell() {
         self.clipsToBounds = true
         self.layer.cornerRadius = Constants.diameter / 2
