@@ -112,10 +112,7 @@ class AppletDetailViewController: UIViewController {
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        self.view.clipsToBounds = true
-        self.view.translatesAutoresizingMaskIntoConstraints = false
         self.addConstraints()
-        self.view.layer.cornerRadius = self.diameter / 2
     }
     
     private func addConstraints() {
