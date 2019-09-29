@@ -19,7 +19,7 @@ class AppletDetailViewController: UIViewController {
     
     var applet: Applet
 
-    var nameLabel: UILabel = {
+    lazy var nameLabel: UILabel = {
         let label = UILabel(frame: .zero)
         label.textColor = .white
         label.numberOfLines = 0
@@ -28,7 +28,7 @@ class AppletDetailViewController: UIViewController {
         return label
     }()
     
-    var authorLabel: UILabel = {
+    lazy var authorLabel: UILabel = {
         let label = UILabel(frame: .zero)
         label.textColor = .white
         label.numberOfLines = 0
@@ -37,7 +37,7 @@ class AppletDetailViewController: UIViewController {
         return label
     }()
     
-    var idLabel: UILabel = {
+    lazy var idLabel: UILabel = {
         let label = UILabel(frame: .zero)
         label.textColor = .white
         label.numberOfLines = 0
@@ -46,7 +46,7 @@ class AppletDetailViewController: UIViewController {
         return label
     }()
 
-    var descriptionLabel: UILabel = {
+    lazy var descriptionLabel: UILabel = {
         let label = UILabel(frame: .zero)
         label.textColor = .white
         label.numberOfLines = 0
@@ -55,10 +55,9 @@ class AppletDetailViewController: UIViewController {
         return label
     }()
     
-    
-    var labelStackView: UIStackView = {
-        let stackView = UIStackView(frame: .zero)
-        stackView.translatesAutoresizingMaskIntoConstraints = false
+    lazy var labelStackView: UIStackView = {
+        let stackView = UIStackView(frame: self.view.frame)
+//        stackView.translatesAutoresizingMaskIntoConstraints = false
         stackView.clipsToBounds = true
         stackView.backgroundColor = .clear
         stackView.axis = .vertical
@@ -67,9 +66,9 @@ class AppletDetailViewController: UIViewController {
         return stackView
     }()
     
-    var channelStackView: UIStackView = {
+    lazy var channelStackView: UIStackView = {
         let stackView = UIStackView(frame: .zero)
-        stackView.translatesAutoresizingMaskIntoConstraints = false
+//        stackView.translatesAutoresizingMaskIntoConstraints = false
         stackView.clipsToBounds = true
         stackView.backgroundColor = .clear
         stackView.axis = .horizontal
@@ -97,26 +96,56 @@ class AppletDetailViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.view.frame = .zero
-        self.viewWillLayoutSubviews()
-        self.view.translatesAutoresizingMaskIntoConstraints = false
-        self.addConstraints()
+        guard let navigationView = self.navigationController?.view else {
+            print("no navigation view controller in the applet detail screen")
+            return
+        }
+        self.view.frame = self.getViewFrame()
+        self.view.bounds = self.getViewFrame()
+        self.view.clipsToBounds = true
+        self.view.layer.masksToBounds = true
         self.view.layer.cornerRadius = self.diameter / 2
         self.view.backgroundColor = self.applet.status == .enabled ? .orangeAppletBackgroundColor
             : .disabledAppletBackgroundColor
+//        self.view.clipsToBounds = true
+//        self.view.layer.cornerRadius = self.diameter / 2
+//        self.addConstraints()
+//        self.configureLabels()
         let swipeDown = UISwipeGestureRecognizer(target: self, action: #selector(self.dismissView))
         swipeDown.direction = UISwipeGestureRecognizer.Direction.down
         self.view.addGestureRecognizer(swipeDown)
         self.navigationItem.rightBarButtonItem = self.doneButtonItem
-    }
+//        self.viewWillLayoutSubviews()
+//        self.addConstraints()
+        self.configureLabels()
+//        self.viewDidLayoutSubviews()
+}
     
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        self.addConstraints()
+    private func getViewFrame() -> CGRect {
+        let x = (UIScreen.main.bounds.width - self.diameter) / 2
+        let y = (UIScreen.main.bounds.height - self.diameter) / 2
+        return CGRect(x: x, y: y, width: diameter, height: diameter)
     }
+
+//    override func viewDidAppear(_ animated: Bool) {
+//        super.viewDidAppear(animated)
+//        self.viewWillLayoutSubviews()
+//        self.addConstraints()
+//        self.configureLabels()
+//        self.view.clipsToBounds = true
+//        self.view.layer.cornerRadius = self.diameter / 2
+//        self.view.backgroundColor = self.applet.status == .enabled ? .orangeAppletBackgroundColor
+//            : .disabledAppletBackgroundColor
+//        self.viewDidLayoutSubviews()
+
+//        self.view.clipsToBounds = true
+//        self.view.translatesAutoresizingMaskIntoConstraints = false
+//        self.addConstraints()
+//        self.view.layer.cornerRadius = self.diameter / 2
+//    }
     
     private func addConstraints() {
-        self.view.removeConstraints(self.view.constraints)
+//        self.view.removeConstraints(self.view.constraints)
         guard let navigationView = self.navigationController?.view else {
             print("no navigation view controller in the applet detail screen")
             return
@@ -125,29 +154,30 @@ class AppletDetailViewController: UIViewController {
             self.view.widthAnchor.constraint(equalToConstant: self.diameter),
             self.view.heightAnchor.constraint(equalToConstant: self.diameter)
             ])
-        self.view.bounds = CGRect(x: navigationView.frame.width - self.diameter, y: navigationView.frame.minY + self.diameter, width: self.diameter, height: self.diameter)
-        self.viewDidLayoutSubviews()
+        self.view.frame = CGRect(x: navigationView.frame.width - self.diameter, y: navigationView.frame.minY + self.diameter, width: self.diameter, height: self.diameter)
+//        self.viewDidLayoutSubviews()
     }
     
     private func configureLabels() {
         guard let channels = self.applet.channels else { return }
         for channel in channels {
             let image = UIImage(contentsOfFile: channel.image_url)
-            self.channelStackView.addArrangedSubview(UIImageView(image: image))
+            self.channelStackView.addSubview(UIImageView(image: image))
         }
         self.nameLabel.text = self.applet.name
         self.idLabel.text = self.applet.id
         self.authorLabel.text = self.applet.author
         self.idLabel.text = self.applet.id
         self.descriptionLabel.text = self.applet.description
+        self.labelStackView.frame = self.view.frame
         
-        self.labelStackView.addArrangedSubview(self.nameLabel)
-        self.labelStackView.addArrangedSubview(self.idLabel)
-        self.labelStackView.addArrangedSubview(self.authorLabel)
-        self.labelStackView.addArrangedSubview(self.channelStackView)
-        self.labelStackView.addArrangedSubview(self.descriptionLabel)
+        self.labelStackView.addSubview(self.nameLabel)
+        self.labelStackView.addSubview(self.idLabel)
+        self.labelStackView.addSubview(self.authorLabel)
+        self.labelStackView.addSubview(self.channelStackView)
+        self.labelStackView.addSubview(self.descriptionLabel)
         self.view.addSubview(self.labelStackView)
-        
+//
     }
     
     @objc private func dismissView() {

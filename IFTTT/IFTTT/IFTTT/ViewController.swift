@@ -90,6 +90,6 @@ extension ViewController: UICollectionViewDataSource, UICollectionViewDelegate, 
         let applet = self.cellDataSource[indexPath.row]
         let viewController = AppletDetailViewController(applet)
         let navigationController = UINavigationController(rootViewController: viewController)
-        self.navigationController?.present(navigationController, animated: true, completion: nil)
+        self.navigationController?.present(navigationController, animated: false, completion: nil)
     }
 }
