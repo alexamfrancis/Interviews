@@ -43,13 +43,12 @@ class ViewController: UIViewController {
         NSLayoutConstraint.activate([
             self.collectionView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
             self.collectionView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
-            self.collectionView.topAnchor.constraint(equalTo: self.view.topAnchor, constant: Constants.standardSpacing),
+            self.collectionView.topAnchor.constraint(equalTo: self.view.topAnchor, constant: Constants.verticalInset),
             self.collectionView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor)
             ])
     }
     
     private func setupCollectionView() {
-//        self.view.backgroundColor = .white
         self.collectionView.backgroundColor = .white
         self.collectionViewLayout.estimatedItemSize = UICollectionViewFlowLayout.automaticSize
         self.collectionViewLayout.sectionInset = UIEdgeInsets(top: Constants.collectionViewVerticalInset, left: Constants.standardSpacing, bottom: Constants.collectionViewVerticalInset, right: Constants.standardSpacing)

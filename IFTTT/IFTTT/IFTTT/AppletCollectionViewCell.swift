@@ -96,14 +96,14 @@ class AppletCollectionViewCell: UICollectionViewCell {
     func addConstraints() {
         NSLayoutConstraint.activate([
             self.iconImage.centerYAnchor.constraint(equalTo: self.centerYAnchor),
-            self.iconImage.leadingAnchor.constraint(equalTo: self.safeAreaLayoutGuide.leadingAnchor, constant: Constants.standardSpacing),
+            self.iconImage.leadingAnchor.constraint(equalTo: self.safeAreaLayoutGuide.leadingAnchor, constant: Constants.standardMargin),
             self.iconImage.heightAnchor.constraint(equalToConstant: Constants.iconDimensions),
             self.iconImage.widthAnchor.constraint(equalToConstant: Constants.iconDimensions),
             
-            self.stackView.topAnchor.constraint(equalTo: self.topAnchor, constant: Constants.standardMargin),
+            self.stackView.topAnchor.constraint(equalTo: self.topAnchor, constant: Constants.inset),
             self.stackView.leadingAnchor.constraint(equalTo: self.iconImage.trailingAnchor, constant: Constants.standardSpacing),
-            self.stackView.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -Constants.standardMargin),
-            self.stackView.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -Constants.standardMargin)
+            self.stackView.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -Constants.inset),
+            self.stackView.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -Constants.inset)
         ])
     }
 

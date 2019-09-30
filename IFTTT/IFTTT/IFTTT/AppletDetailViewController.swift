@@ -147,10 +147,11 @@ class AppletDetailViewController: UIViewController {
         let imageView = UIImageView(image: image)
         imageView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            imageView.heightAnchor.constraint(equalToConstant: Constants.iconHeight)
+            imageView.heightAnchor.constraint(equalToConstant: Constants.iconDimensions),
+            imageView.widthAnchor.constraint(equalToConstant: Constants.iconDimensions)
             ])
         imageView.clipsToBounds = true
-        imageView.layer.cornerRadius = imageView.frame.height / 2
+        imageView.layer.cornerRadius = Constants.iconDimensions / 2
         return imageView
     }
 

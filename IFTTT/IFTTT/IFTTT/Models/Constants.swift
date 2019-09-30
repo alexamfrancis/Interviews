@@ -11,8 +11,8 @@ import UIKit
 struct Constants {
     static let standardSpacing: CGFloat = 8.0
     static let standardMargin: CGFloat = 16.0
-    static let iconHeight: CGFloat = 20.0
     static let inset: CGFloat = 40.0
+    static let verticalInset: CGFloat = 100.0
 
 //    static let standardMargin: CGFloat = 32.0
     static let iconDimensions: CGFloat = 44.0
