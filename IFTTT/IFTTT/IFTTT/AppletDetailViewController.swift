@@ -25,9 +25,10 @@ class Label: UILabel {
 
 class AppletDetailViewController: UIViewController {
     private lazy var diameter: CGFloat = {
-        return UIScreen.main.bounds.width * 0.8
+        return UIScreen.main.bounds.width * 1.2
     }()
-    
+    static let inset: CGFloat = 40.0
+
     var applet: Applet
     var nameLabel = Label()
     var authorLabel = Label()
@@ -39,10 +40,10 @@ class AppletDetailViewController: UIViewController {
         let stackView = UIStackView(frame: .zero)
         stackView.translatesAutoresizingMaskIntoConstraints = false
         stackView.axis = .vertical
-        stackView.alignment = .leading
-        stackView.distribution = .
+        stackView.alignment = .center
+        stackView.spacing = 0.0
+        stackView.distribution = .fillProportionally
         stackView.autoresizesSubviews = true
-        stackView.contentMode = .center
         return stackView
     }()
     
@@ -121,8 +122,8 @@ class AppletDetailViewController: UIViewController {
         NSLayoutConstraint.activate([
             self.backgroundView.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
             self.backgroundView.centerYAnchor.constraint(equalTo: self.view.centerYAnchor),
-            self.backgroundView.widthAnchor.constraint(equalToConstant: self.diameter),
-            self.backgroundView.heightAnchor.constraint(equalToConstant: self.diameter),
+            self.backgroundView.widthAnchor.constraint(equalToConstant: self.diameter - AppletDetailViewController.inset),
+            self.backgroundView.heightAnchor.constraint(equalToConstant: self.diameter - AppletDetailViewController.inset),
             self.labelStackView.centerXAnchor.constraint(equalTo: self.backgroundView.centerXAnchor),
             self.labelStackView.centerYAnchor.constraint(equalTo: self.backgroundView.centerYAnchor),
             self.labelStackView.widthAnchor.constraint(equalToConstant: self.diameter),
