@@ -19,6 +19,7 @@
 		D0A096FF233A5E38003770B9 /* AppletDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0A096FE233A5E38003770B9 /* AppletDetailViewController.swift */; };
 		D0A09701233AEBCC003770B9 /* Date+Additions.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0A09700233AEBCC003770B9 /* Date+Additions.swift */; };
 		D0A09705233B4C87003770B9 /* UIColor+Additions.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0A09704233B4C87003770B9 /* UIColor+Additions.swift */; };
+		D0A097272341A53A003770B9 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0A097262341A53A003770B9 /* Constants.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -36,6 +37,7 @@
 		D0A096FE233A5E38003770B9 /* AppletDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppletDetailViewController.swift; sourceTree = "<group>"; };
 		D0A09700233AEBCC003770B9 /* Date+Additions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+Additions.swift"; sourceTree = "<group>"; };
 		D0A09704233B4C87003770B9 /* UIColor+Additions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+Additions.swift"; sourceTree = "<group>"; };
+		D0A097262341A53A003770B9 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -87,6 +89,7 @@
 				D0A096F82335BA38003770B9 /* MockData.swift */,
 				D0A096F62335B945003770B9 /* Applet.swift */,
 				D0A096FA233923C0003770B9 /* Channel.swift */,
+				D0A097262341A53A003770B9 /* Constants.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -172,6 +175,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				D0A096FD23396627003770B9 /* CollectionView+Additions.swift in Sources */,
+				D0A097272341A53A003770B9 /* Constants.swift in Sources */,
 				D0A09705233B4C87003770B9 /* UIColor+Additions.swift in Sources */,
 				D0A096E52335B853003770B9 /* ViewController.swift in Sources */,
 				D0A096FB233923C0003770B9 /* Channel.swift in Sources */,

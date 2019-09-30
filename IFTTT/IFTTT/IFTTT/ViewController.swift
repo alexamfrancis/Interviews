@@ -10,12 +10,6 @@ import UIKit
 
 class ViewController: UIViewController {
     
-    private struct Constants {
-        /// Margin from right anchor of safe area to right anchor of Image
-        static let collectionViewVerticalInset: CGFloat = 2.0
-        static let standardSpacing: CGFloat = 8.0
-    }
-
     private var collectionViewLayout = UICollectionViewFlowLayout()
     private let appletCell: AppletCollectionViewCell = AppletCollectionViewCell()
     private var cellDataSource = MockData.applets
@@ -55,7 +49,7 @@ class ViewController: UIViewController {
     }
     
     private func setupCollectionView() {
-        self.view.backgroundColor = .white
+//        self.view.backgroundColor = .white
         self.collectionView.backgroundColor = .white
         self.collectionViewLayout.estimatedItemSize = UICollectionViewFlowLayout.automaticSize
         self.collectionViewLayout.sectionInset = UIEdgeInsets(top: Constants.collectionViewVerticalInset, left: Constants.standardSpacing, bottom: Constants.collectionViewVerticalInset, right: Constants.standardSpacing)
@@ -90,6 +84,6 @@ extension ViewController: UICollectionViewDataSource, UICollectionViewDelegate, 
         let applet = self.cellDataSource[indexPath.row]
         let viewController = AppletDetailViewController(applet)
         let navigationController = UINavigationController(rootViewController: viewController)
-        self.navigationController?.present(navigationController, animated: false, completion: nil)
+        self.navigationController?.present(navigationController, animated: true, completion: nil)
     }
 }

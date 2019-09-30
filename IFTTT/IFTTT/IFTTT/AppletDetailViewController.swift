@@ -9,13 +9,18 @@
 import UIKit
 
 class Label: UILabel {
-    init() {
+    init(fontStyle: UIFont.TextStyle = .body) {
         super.init(frame: .infinite)
         self.textColor = .white
         self.autoresizesSubviews = true
         self.numberOfLines = 0
         self.lineBreakMode = .byWordWrapping
-        self.font = UIFont.preferredFont(forTextStyle: .body)
+        self.font = UIFont.preferredFont(forTextStyle: fontStyle)
+        self.setContentHuggingPriority(.defaultLow, for: .horizontal)
+        self.setContentHuggingPriority(.defaultLow, for: .vertical)
+        self.setContentCompressionResistancePriority(.defaultHigh, for: .horizontal)
+        self.setContentCompressionResistancePriority(.defaultHigh, for: .vertical)
+        self.adjustsFontForContentSizeCategory = true
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -27,12 +32,11 @@ class AppletDetailViewController: UIViewController {
     private lazy var diameter: CGFloat = {
         return UIScreen.main.bounds.width * 1.2
     }()
-    static let inset: CGFloat = 40.0
 
     var applet: Applet
-    var nameLabel = Label()
-    var authorLabel = Label()
-    var idLabel = Label()
+    var nameLabel = Label(fontStyle: .headline)
+    var authorLabel = Label(fontStyle: .subheadline)
+    var idLabel = Label(fontStyle: .caption1)
     var descriptionLabel = Label()
     var channelStackView: UIStackView?
 
@@ -41,7 +45,7 @@ class AppletDetailViewController: UIViewController {
         stackView.translatesAutoresizingMaskIntoConstraints = false
         stackView.axis = .vertical
         stackView.alignment = .center
-        stackView.spacing = 0.0
+        stackView.spacing = 16.0
         stackView.distribution = .fillProportionally
         stackView.autoresizesSubviews = true
         return stackView
@@ -51,7 +55,6 @@ class AppletDetailViewController: UIViewController {
         let view = UIView(frame: .zero)
         view.translatesAutoresizingMaskIntoConstraints = false
         view.backgroundColor = .purple
-        view.layer.cornerRadius = self.diameter / 2
         view.clipsToBounds = true
         return view
     }()
@@ -70,8 +73,8 @@ class AppletDetailViewController: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
     
-    override func viewDidLoad() {
-        super.viewDidLoad()
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
         self.addDismissGestures()
         self.setupChannelsHorizontalStackView()
         self.configureLabels()
@@ -82,9 +85,10 @@ class AppletDetailViewController: UIViewController {
         if let channels = self.applet.channels {
             let iconURLs = channels.map{ $0.image_url }
             var icons = [UIImageView]()
-            icons = iconURLs.map { UIImageView(image: self.getImage(from: $0)) }
+            icons = iconURLs.map { self.getImage(from: $0) }
             self.channelStackView?.backgroundColor = .clear
             self.channelStackView?.axis = .horizontal
+            self.channelStackView?.spacing = Constants.standardSpacing
             self.channelStackView?.alignment = .center
             self.channelStackView?.distribution = .equalSpacing
             self.channelStackView = UIStackView(arrangedSubviews: icons)
@@ -106,7 +110,7 @@ class AppletDetailViewController: UIViewController {
     
     private func configureLabels() {
         self.nameLabel.text = self.applet.name
-        self.idLabel.text = self.applet.id
+        self.idLabel.text = "ID: \(self.applet.id ?? "unknown")" // NOTE: All variables should be localized with a `Localization class` so any string could be translated — e.g. "\(self.myString.localized)"
         self.authorLabel.text = self.applet.author
         self.idLabel.text = self.applet.id
         self.descriptionLabel.text = self.applet.description
@@ -114,7 +118,7 @@ class AppletDetailViewController: UIViewController {
         self.labelStackView.addArrangedSubview(self.nameLabel)
         self.labelStackView.addArrangedSubview(self.idLabel)
         self.labelStackView.addArrangedSubview(self.authorLabel)
-        if let channels = self.channelStackView { self.labelStackView.addSubview(channels) }
+        if let channels = self.channelStackView { self.labelStackView.addArrangedSubview(channels) }
         self.labelStackView.addArrangedSubview(self.descriptionLabel)
     }
 
@@ -122,26 +126,32 @@ class AppletDetailViewController: UIViewController {
         NSLayoutConstraint.activate([
             self.backgroundView.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
             self.backgroundView.centerYAnchor.constraint(equalTo: self.view.centerYAnchor),
-            self.backgroundView.widthAnchor.constraint(equalToConstant: self.diameter - AppletDetailViewController.inset),
-            self.backgroundView.heightAnchor.constraint(equalToConstant: self.diameter - AppletDetailViewController.inset),
+            self.backgroundView.widthAnchor.constraint(equalToConstant: self.diameter),
+            self.backgroundView.heightAnchor.constraint(equalToConstant: self.diameter),
             self.labelStackView.centerXAnchor.constraint(equalTo: self.backgroundView.centerXAnchor),
             self.labelStackView.centerYAnchor.constraint(equalTo: self.backgroundView.centerYAnchor),
-            self.labelStackView.widthAnchor.constraint(equalToConstant: self.diameter),
-            self.labelStackView.heightAnchor.constraint(equalToConstant: self.diameter)
+            self.labelStackView.widthAnchor.constraint(equalToConstant: self.diameter / 1.5),
+            self.labelStackView.heightAnchor.constraint(equalToConstant: self.diameter / 1.5)
             ])
     }
-
     
     @objc private func dismissView() {
         self.dismiss(animated: true, completion: nil)
     }
     
-    private func getImage(from url: String) -> UIImage {
+    private func getImage(from url: String) -> UIImageView {
         guard let data: Data = try? Data(contentsOf: URL(string: url)!), let image = UIImage(data: data) else {
             print("failed to decode the data from the contents of the file URL path")
-            return UIImage(imageLiteralResourceName: "icon")
+            return UIImageView(image: UIImage(imageLiteralResourceName: "icon"))
         }
-        return image
+        let imageView = UIImageView(image: image)
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            imageView.heightAnchor.constraint(equalToConstant: Constants.iconHeight)
+            ])
+        imageView.clipsToBounds = true
+        imageView.layer.cornerRadius = imageView.frame.height / 2
+        return imageView
     }
 
     private func addDismissGestures() {

@@ -8,14 +8,7 @@
 
 import UIKit
 
-class AppletCollectionViewCell: UICollectionViewCell {
-    struct Constants {
-        static let standardMargin: CGFloat = 32.0
-        static let spacing: CGFloat = 8.0
-        static let iconDimensions: CGFloat = 44.0
-        static let diameter: CGFloat = UIScreen.main.bounds.width / 1.5
-    }
-    
+class AppletCollectionViewCell: UICollectionViewCell {    
     var nameLabel: UILabel = {
         let label = UILabel(frame: .zero)
         label.textColor = .white
@@ -57,8 +50,8 @@ class AppletCollectionViewCell: UICollectionViewCell {
         stackView.clipsToBounds = true
         stackView.backgroundColor = .clear
         stackView.axis = .vertical
-        stackView.alignment = .leading
-        stackView.distribution = .equalSpacing
+        stackView.alignment = .center
+        stackView.distribution = .equalCentering
         return stackView
     }()
 
@@ -103,12 +96,12 @@ class AppletCollectionViewCell: UICollectionViewCell {
     func addConstraints() {
         NSLayoutConstraint.activate([
             self.iconImage.centerYAnchor.constraint(equalTo: self.centerYAnchor),
-            self.iconImage.leadingAnchor.constraint(equalTo: self.safeAreaLayoutGuide.leadingAnchor, constant: Constants.spacing),
+            self.iconImage.leadingAnchor.constraint(equalTo: self.safeAreaLayoutGuide.leadingAnchor, constant: Constants.standardSpacing),
             self.iconImage.heightAnchor.constraint(equalToConstant: Constants.iconDimensions),
             self.iconImage.widthAnchor.constraint(equalToConstant: Constants.iconDimensions),
             
             self.stackView.topAnchor.constraint(equalTo: self.topAnchor, constant: Constants.standardMargin),
-            self.stackView.leadingAnchor.constraint(equalTo: self.iconImage.trailingAnchor, constant: Constants.spacing),
+            self.stackView.leadingAnchor.constraint(equalTo: self.iconImage.trailingAnchor, constant: Constants.standardSpacing),
             self.stackView.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -Constants.standardMargin),
             self.stackView.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -Constants.standardMargin)
         ])
