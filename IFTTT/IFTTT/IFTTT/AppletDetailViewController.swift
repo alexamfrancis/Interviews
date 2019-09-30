@@ -13,6 +13,7 @@ class Label: UILabel {
         super.init(frame: .infinite)
         self.textColor = .white
         self.autoresizesSubviews = true
+        self.textAlignment = .center
         self.numberOfLines = 0
         self.lineBreakMode = .byWordWrapping
         self.font = UIFont.preferredFont(forTextStyle: fontStyle)
@@ -45,7 +46,7 @@ class AppletDetailViewController: UIViewController {
         stackView.translatesAutoresizingMaskIntoConstraints = false
         stackView.axis = .vertical
         stackView.alignment = .center
-        stackView.spacing = 16.0
+        stackView.spacing = Constants.standardSpacing
         stackView.distribution = .fillProportionally
         stackView.autoresizesSubviews = true
         return stackView
@@ -54,7 +55,6 @@ class AppletDetailViewController: UIViewController {
     private lazy var backgroundView: UIView = {
         let view = UIView(frame: .zero)
         view.translatesAutoresizingMaskIntoConstraints = false
-        view.backgroundColor = .purple
         view.clipsToBounds = true
         return view
     }()
@@ -86,12 +86,12 @@ class AppletDetailViewController: UIViewController {
             let iconURLs = channels.map{ $0.image_url }
             var icons = [UIImageView]()
             icons = iconURLs.map { self.getImage(from: $0) }
+            self.channelStackView = UIStackView(arrangedSubviews: icons)
             self.channelStackView?.backgroundColor = .clear
             self.channelStackView?.axis = .horizontal
-            self.channelStackView?.spacing = Constants.standardSpacing
-            self.channelStackView?.alignment = .center
-            self.channelStackView?.distribution = .equalSpacing
-            self.channelStackView = UIStackView(arrangedSubviews: icons)
+            self.channelStackView?.alignment = .top
+            self.channelStackView?.spacing = Constants.standardMargin
+            self.channelStackView?.layoutSubviews()
         }
     }
     
@@ -110,16 +110,16 @@ class AppletDetailViewController: UIViewController {
     
     private func configureLabels() {
         self.nameLabel.text = self.applet.name
-        self.idLabel.text = "ID: \(self.applet.id ?? "unknown")" // NOTE: All variables should be localized with a `Localization class` so any string could be translated — e.g. "\(self.myString.localized)"
         self.authorLabel.text = self.applet.author
-        self.idLabel.text = self.applet.id
         self.descriptionLabel.text = self.applet.description
-        
+        self.idLabel.text = self.applet.id
+
         self.labelStackView.addArrangedSubview(self.nameLabel)
-        self.labelStackView.addArrangedSubview(self.idLabel)
         self.labelStackView.addArrangedSubview(self.authorLabel)
         if let channels = self.channelStackView { self.labelStackView.addArrangedSubview(channels) }
         self.labelStackView.addArrangedSubview(self.descriptionLabel)
+        self.idLabel.text = "ID: \(self.applet.id ?? "unknown")" // NOTE: All variables should be localized with a `Localization class` so any string could be translated — e.g. "\(self.myString.localized)"
+        self.labelStackView.addArrangedSubview(self.idLabel)
     }
 
     private func addSubviewConstraints() {
