@@ -14,42 +14,27 @@ struct QRCodeView: View {
     var qrCodeString: String
     
     var qrImage: UIImage {
-//        UIImage(named: "QRCode")
-        guard let image = self.generateQRCode(from: self.qrCodeString) else {
-            print("Failed to find the URL for the QR code")
-            return  UIImage(named: "QRCode")!
+        DispatchQueue.main.async {
+            guard let image = self.generateQRCode(from: self.qrCodeString) as? UIImage else {
+                print("Failed to find the URL for the QR code")
+                return
+            }
+            return image
         }
-        return image
-//        return UIImage.image(forQRCodeString: self.qrCodeString) // This didn't work
+        return UIImage(named: "")
     }
     
     var body: some View {
-        NavigationView {
-            Image(uiImage: self.qrImage).resizable()
-            .frame(width: 300, height: 300, alignment: .center)
-            .border(Color.black, width: 2)
-            .navigationBarItems(trailing: Button(action: { self.onDismiss() }) { Text("Done") })
+            NavigationView {
+                Image(uiImage: self.qrImage).resizable(resizingMode: Image.ResizingMode.stretch)
+                .frame(width: 300, height: 300, alignment: .center)
+                .border(Color.black, width: 2)
+                .navigationBarItems(trailing: Button(action: { self.onDismiss() }) { Text("Done") })
         }
     }
     
-//    private func getData(from url: URL, completion: @escaping (Data?, URLResponse?, Error?) -> ()) {
-//        URLSession.shared.dataTask(with: url, completionHandler: completion).resume()
-//    }
-    
     func generateQRCode(from string: String) -> UIImage? {
-//        let data = string.data(using: String.Encoding.ascii)
-//
-//        if let filter = CIFilter(name: "CIQRCodeGenerator") {
-//            filter.setValue(data, forKey: "inputMessage")
-//            let transform = CGAffineTransform(scaleX: 3, y: 3)
-//
-//            if let output = filter.outputImage?.transformed(by: transform) {
-//                return UIImage(ciImage: output)
-//            }
-//        }
-//
-//        return nil
-        
+//        var image: UIImage
         // Get define string to encode
         let myString = "https://pennlabs.org"
         // Get data from the string
@@ -73,25 +58,14 @@ struct QRCodeView: View {
         guard let outputCIImage = maskToAlphaFilter.outputImage else { return nil }
         // Do some processing to get the UIImage
         let context = CIContext()
+        context.clearCaches()
         guard let cgImage = context.createCGImage(outputCIImage, from: outputCIImage.extent) else { return nil }
+//        DispatchQueue.main.async() {
+//            image = UIImage(cgImage: cgImage)
+//        }
         return UIImage(cgImage: cgImage)
 
     }
-    
-//    private func downloadImage(from url: URL) -> UIImage {
-//        print("Download Started")
-//        var image = UIImage()
-//        self.getData(from: url) { data, response, error in
-//            guard let data = data, error == nil else { return }
-//            print(response?.suggestedFilename ?? url.lastPathComponent)
-//            print("Download Finished")
-//            DispatchQueue.main.async() {
-//                image = QRCodeView(onDismiss: <#T##() -> ()#>, qrCodeString: <#T##String#>)
-//                image = UIImage(data: data)!
-//            }
-//        }
-//        return image
-//    }
 }
 
 #if DEBUG
