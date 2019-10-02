@@ -14,28 +14,27 @@ struct QRCodeView: View {
     var qrCodeString: String
     
     var qrImage: UIImage {
-        let image: UIImage
+        var image: UIImage = UIImage()
         DispatchQueue.main.async {
-            guard let qrCode = self.generateQRCode(from: self.qrCodeString) as? UIImage else {
+            guard let qrCode = self.generateQRCode(from: self.qrCodeString) else {
                 print("Failed to find the URL for the QR code")
                 return
             }
             image = qrCode
         }
-        return image ?? 
+        return image
     }
-    
+
     var body: some View {
-            NavigationView {
-                Image(uiImage: self.qrImage).resizable(resizingMode: Image.ResizingMode.stretch)
-                .frame(width: 300, height: 300, alignment: .center)
-                .border(Color.black, width: 2)
-                .navigationBarItems(trailing: Button(action: { self.onDismiss() }) { Text("Done") })
+        NavigationView {
+            Image(uiImage: self.qrImage).resizable()
+            .frame(width: 300, height: 300, alignment: .center)
+            .border(Color.black, width: 2)
+            .navigationBarItems(trailing: Button(action: { self.onDismiss() }) { Text("Done") })
         }
     }
-    
+
     func generateQRCode(from string: String) -> UIImage? {
-//        var image: UIImage
         // Get define string to encode
         let myString = "https://pennlabs.org"
         // Get data from the string
@@ -61,11 +60,7 @@ struct QRCodeView: View {
         let context = CIContext()
         context.clearCaches()
         guard let cgImage = context.createCGImage(outputCIImage, from: outputCIImage.extent) else { return nil }
-//        DispatchQueue.main.async() {
-//            image = UIImage(cgImage: cgImage)
-//        }
         return UIImage(cgImage: cgImage)
-
     }
 }
 
