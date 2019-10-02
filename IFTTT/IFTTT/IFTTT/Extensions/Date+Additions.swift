@@ -11,7 +11,6 @@ import Foundation
 extension Date {
     public static func FromString(_ dateString: String) -> Date {
         let dateFormatter = DateFormatter()
-        // `yyyy-MM-dd-HH:mm:ss Z` —— for example: `2019-08-08 07:10:25 -0700`
         dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss Z"
         dateFormatter.locale = Locale(identifier: "en_US_POSIX") // set locale to reliable US_POSIX
         guard let date = dateFormatter.date(from: dateString) else {

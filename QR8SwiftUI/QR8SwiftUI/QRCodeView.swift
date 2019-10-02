@@ -14,14 +14,15 @@ struct QRCodeView: View {
     var qrCodeString: String
     
     var qrImage: UIImage {
+        let image: UIImage
         DispatchQueue.main.async {
-            guard let image = self.generateQRCode(from: self.qrCodeString) as? UIImage else {
+            guard let qrCode = self.generateQRCode(from: self.qrCodeString) as? UIImage else {
                 print("Failed to find the URL for the QR code")
                 return
             }
-            return image
+            image = qrCode
         }
-        return UIImage(named: "")
+        return image ?? 
     }
     
     var body: some View {

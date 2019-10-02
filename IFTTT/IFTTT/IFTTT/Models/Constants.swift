@@ -14,9 +14,7 @@ struct Constants {
     static let inset: CGFloat = 40.0
     static let verticalInset: CGFloat = 100.0
 
-//    static let standardMargin: CGFloat = 32.0
     static let iconDimensions: CGFloat = 44.0
     static let diameter: CGFloat = UIScreen.main.bounds.width / 1.5
-    /// Margin from right anchor of safe area to right anchor of Image
     static let collectionViewVerticalInset: CGFloat = 2.0
 }
