@@ -16,5 +16,5 @@ struct Constants {
 
     static let iconDimensions: CGFloat = 44.0
     static let diameter: CGFloat = UIScreen.main.bounds.width / 1.5
-    static let collectionViewVerticalInset: CGFloat = 2.0
+    static let collectionViewVerticalInset: CGFloat = 16.0
 }

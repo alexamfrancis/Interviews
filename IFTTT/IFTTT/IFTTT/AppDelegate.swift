@@ -17,7 +17,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         self.window = UIWindow(frame: UIScreen.main.bounds)
         self.window?.backgroundColor = .white
         guard let window = self.window else {
-            print("fuck false")
+            print("app iddnt launch, returning false")
             return false
         }
         let viewController = ViewController()

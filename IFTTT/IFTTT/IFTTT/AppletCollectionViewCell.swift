@@ -57,10 +57,16 @@ class AppletCollectionViewCell: UICollectionViewCell {
 
     var applet: Applet?
     
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        self.clipsToBounds = true
+        self.layer.cornerRadius = self.frame.height / 2
+    }
+    
     func configure(applet: Applet) {
         self.applet = applet
-        self.formatCell()
-        
+        self.backgroundColor = self.applet?.status ?? .disabled == .enabled ? .orangeAppletBackgroundColor : .disabledAppletBackgroundColor
+
         self.nameLabel.text = applet.name
         self.authorLabel.text = applet.author
         self.iconImage.image = self.getImage()
@@ -73,18 +79,7 @@ class AppletCollectionViewCell: UICollectionViewCell {
         
         self.addConstraints()
     }
-    
-    func formatCell() {
-        self.clipsToBounds = true
-        self.layer.cornerRadius = Constants.diameter / 2
-        self.backgroundColor = self.applet?.status ?? .disabled == .enabled ? .orangeAppletBackgroundColor : .disabledAppletBackgroundColor
-        NSLayoutConstraint.activate([
-            self.heightAnchor.constraint(equalToConstant: Constants.diameter),
-            self.widthAnchor.constraint(equalToConstant: Constants.diameter)
-            ])
         
-    }
-    
     private func getImage() -> UIImage {
         guard let applet = self.applet, let data: Data = try? Data(contentsOf: URL(string: applet.channels?.first?.image_url ?? "https://assets.ifttt.com/images/channels/651849913/icons/regular.png") ?? URL(fileURLWithPath: "/Users/alexafrancis/Documents/Personal/Interviews/Interviews/IFTTT/iftttApplet/Bathroom Fan/Resources/appletData.json")), let image = UIImage(data: data) else {
             print("failed to decode the data from the contents of the file URL path")

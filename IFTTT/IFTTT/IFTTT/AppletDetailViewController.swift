@@ -73,9 +73,10 @@ class AppletDetailViewController: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
     
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
+    override func viewDidLoad() {
+        super.viewDidLoad()
         self.addDismissGestures()
+        self.navigationController?.view.backgroundColor = .white
         self.setupChannelsHorizontalStackView()
         self.configureLabels()
         self.setupVerticalStackView()
@@ -126,8 +127,8 @@ class AppletDetailViewController: UIViewController {
         NSLayoutConstraint.activate([
             self.backgroundView.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
             self.backgroundView.centerYAnchor.constraint(equalTo: self.view.centerYAnchor),
-            self.backgroundView.widthAnchor.constraint(equalToConstant: self.diameter),
-            self.backgroundView.heightAnchor.constraint(equalToConstant: self.diameter),
+            self.backgroundView.widthAnchor.constraint(equalToConstant: self.diameter), // maybe self.view.widthAnchor?
+            self.backgroundView.heightAnchor.constraint(equalToConstant: self.diameter), // maybe self.view.heightAnchor?
             self.labelStackView.centerXAnchor.constraint(equalTo: self.backgroundView.centerXAnchor),
             self.labelStackView.centerYAnchor.constraint(equalTo: self.backgroundView.centerYAnchor),
             self.labelStackView.widthAnchor.constraint(equalToConstant: self.diameter / 1.5),
@@ -140,6 +141,7 @@ class AppletDetailViewController: UIViewController {
     }
     
     private func getImage(from url: String) -> UIImageView {
+        
         guard let data: Data = try? Data(contentsOf: URL(string: url)!), let image = UIImage(data: data) else {
             print("failed to decode the data from the contents of the file URL path")
             return UIImageView(image: UIImage(imageLiteralResourceName: "icon"))
